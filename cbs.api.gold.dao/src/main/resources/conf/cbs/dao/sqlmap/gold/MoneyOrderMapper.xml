@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MoneyOrderMapper">
+
+	<sql id="table_name">cbs_money_order</sql>
+	
+	<select id="findById" resultType="com.lifeix.cbs.api.dto.money.MoneyOrder" >
+		SELECT
+		orderId, 
+		userId, 
+		cardId, 
+		price, 
+		amount, 
+		card_type AS type, 
+		handsel, 
+		status, 
+		createTime 
+		FROM 
+		<include refid="table_name" /> 
+		WHERE 
+		orderId = #{orderId}
+		LIMIT 1
+	</select>
+	
+	<insert id="insert" parameterType="com.lifeix.cbs.api.dto.money.MoneyOrder" >
+		INSERT INTO 
+		<include refid="table_name" />  
+		(orderId, userId, cardId, price, amount, card_type, handsel, status, createTime) 
+		VALUES 
+		(#{orderId},#{userId},#{cardId},#{price},#{amount},#{type},#{handsel},#{status},#{createTime})
+	</insert>
+	
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.money.MoneyOrder">
+		UPDATE  
+		<include refid="table_name" /> 
+		SET 
+		status=#{status} 
+		WHERE orderId = #{orderId}
+	</update>
+	
+	
+</mapper>

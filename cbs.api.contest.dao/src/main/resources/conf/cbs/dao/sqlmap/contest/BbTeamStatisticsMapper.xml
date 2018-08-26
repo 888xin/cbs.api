@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BbTeamStatisticsMapper">
+
+	<sql id="TAB_NAME">cbs_bb_team_statistics</sql>
+	
+	<select id="selectByContestId" resultType="com.lifeix.cbs.contest.dto.bb.BbTeamStatistics">
+		SELECT 
+		sId,contestId,teamId,team,scores,threePointMade,threePointAtt,twoPointMade,
+		twoPointAtt,freeThrowMade,freeThrowAtt,offensiveRebounds,defensiveRebounds,
+		assists,turnovers,steals,blocks,personalFouls,techFouls  
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE contestId = #{contestId} 
+	</select>
+	
+	<update id="saveStatistics" parameterType="java.util.List">
+		INSERT INTO 
+		<include refid="TAB_NAME" />
+		    (sId,contestId,teamId,team,scores,threePointMade,threePointAtt,twoPointMade,
+			twoPointAtt,freeThrowMade,freeThrowAtt,offensiveRebounds,defensiveRebounds,
+			assists,turnovers,steals,blocks,personalFouls,techFouls,createTime)  
+	    VALUES  
+	    <foreach collection="list" index="index" item="item" separator=",">  
+	        (#{item.sId},#{item.contestId},#{item.teamId},#{item.team},#{item.scores},#{item.threePointMade},
+	        #{item.threePointAtt},#{item.twoPointMade},#{item.twoPointAtt},#{item.freeThrowMade},#{item.freeThrowAtt},
+	        #{item.offensiveRebounds},#{item.defensiveRebounds},#{item.assists},#{item.turnovers},
+	        #{item.steals},#{item.blocks},#{item.personalFouls},#{item.techFouls},NOW()) 
+	    </foreach> 
+	    ON DUPLICATE KEY UPDATE  
+		scores = VALUES(scores),
+	    threePointMade = VALUES(threePointMade), 
+		threePointAtt = VALUES(threePointAtt), 
+		twoPointMade = VALUES(twoPointMade), 
+		twoPointAtt = VALUES(twoPointAtt), 
+		freeThrowMade = VALUES(freeThrowMade), 
+		freeThrowAtt = VALUES(freeThrowAtt), 
+		offensiveRebounds = VALUES(offensiveRebounds), 
+		defensiveRebounds = VALUES(defensiveRebounds), 
+		assists = VALUES(assists), 
+		turnovers = VALUES(turnovers), 
+		steals = VALUES(steals), 
+		blocks = VALUES(blocks), 
+		personalFouls = VALUES(personalFouls), 
+		techFouls = VALUES(techFouls)
+	</update>
+
+</mapper>

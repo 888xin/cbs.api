@@ -1,0 +1,22 @@
+# xconfig base configurations for different enviroments
+
+# 开发环境，一般情况下可以设置为classpath下
+development:
+  xconfig:
+    baseUri:  classpath:/
+
+# 生产环境
+production:
+  xconfig:
+    baseUri:  http://xconfig.l99.com/production/
+
+# 沙盒环境，内部测试环境
+sandboxing:
+  xconfig:
+    baseUri:  http://xconfig.xy.l99.com/sandboxing/trunk/
+
+# 预生产环境
+staging:
+  xconfig:
+    baseUri:  http://xconfig.l99.com/staging/
+

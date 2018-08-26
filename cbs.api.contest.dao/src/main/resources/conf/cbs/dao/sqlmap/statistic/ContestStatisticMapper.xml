@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContestStatisticMapper">
+
+
+	<select id="getFbOpStatistic" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		cbs_fb_bet_op
+		WHERE date_format(createTime,'%Y-%m-%d')= #{date}
+	</select>
+
+    <select id="getFbJcStatistic" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		cbs_fb_bet_jc
+		WHERE date_format(createTime,'%Y-%m-%d')= #{date}
+	</select>
+
+    <select id="getBbOpStatistic" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		cbs_bb_bet_op
+		WHERE date_format(createTime,'%Y-%m-%d')= #{date}
+	</select>
+
+    <select id="getBbJcStatistic" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM
+		cbs_bb_bet_jc
+		WHERE date_format(createTime,'%Y-%m-%d')= #{date}
+	</select>
+
+    <select id="getFbOpUserStatistic" resultType="com.lifeix.cbs.contest.dto.bet.BetOp">
+		SELECT
+		bId,userId
+		FROM
+		cbs_fb_bet_op
+		WHERE date_format(createTime,'%Y-%m-%d')= #{date}
+		GROUP BY userId
+	</select>
+
+    <select id="getFbJcUserStatistic" resultType="com.lifeix.cbs.contest.dto.bet.BetJc">
+		SELECT
+		bId,userId
+		FROM
+		cbs_fb_bet_jc
+		WHERE date_format(createTime,'%Y-%m-%d')= #{date}
+		GROUP BY userId
+	</select>
+
+    <select id="getBbOpUserStatistic" resultType="com.lifeix.cbs.contest.dto.bet.BetOp">
+		SELECT
+		bId,userId
+		FROM
+		cbs_bb_bet_op
+		WHERE date_format(createTime,'%Y-%m-%d')= #{date}
+		GROUP BY userId
+	</select>
+
+    <select id="getBbJcUserStatistic" resultType="com.lifeix.cbs.contest.dto.bet.BetJc">
+		SELECT
+		bId,userId
+		FROM
+		cbs_bb_bet_jc
+		WHERE date_format(createTime,'%Y-%m-%d')= #{date}
+		GROUP BY userId
+	</select>
+
+	
+</mapper>

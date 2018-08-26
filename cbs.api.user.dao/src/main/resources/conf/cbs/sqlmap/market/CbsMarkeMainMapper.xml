@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CbsMarkeMainMapper">
+
+	<sql id="TAB_NAME">cbs_market_main</sql>
+
+	<sql id="SELECT_COLUMN">id,marketCode,nickName,password,status</sql>
+
+	<select id="findList" resultType="com.lifeix.cbs.api.dto.market.CbsMarketMain">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		<where>
+			<if test="nickName != null">
+				AND nickName = #{nickName}
+			</if>
+			<if test="password != null">
+				AND password = #{password}
+			</if>
+			<if test="status != null">
+				AND status = #{status}
+			</if>
+		</where>
+
+	</select>
+
+</mapper>

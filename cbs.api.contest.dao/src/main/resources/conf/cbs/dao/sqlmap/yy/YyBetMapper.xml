@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="YyBetMapper">
+
+	<sql id="TAB_NAME">cbs_yy_bet</sql>
+
+	<sql id="SELECT_COLUMN">id,
+		contestId,
+		userId,
+		support,
+		yyRoi,
+		bet,
+		back,
+		status,
+		createTime,
+		contentId,
+		ipaddress,
+		isLongbi,
+		coupon,
+		client
+	</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.yy.YyBet">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		id = #{id}
+		LIMIT 1
+	</select>
+
+	<insert id="insertAndGetPrimaryKey" parameterType="com.lifeix.cbs.contest.dto.yy.YyBet"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(contestId, userId, support, yyRoi, bet, back, status, createTime,
+		contentId, ipaddress, isLongbi, coupon,client)
+		VALUES
+		(#{contestId},#{userId},#{support},#{yyRoi},#{bet},#{back},#{status},#{createTime},#{contentId},#{ipaddress},#{isLongbi},#{coupon},#{client})
+	</insert>
+
+	<select id="selectByBet" resultType="com.lifeix.cbs.contest.dto.yy.YyBet">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		contestId = #{contestId}
+		AND
+		userId = #{userId}
+		AND
+		support =
+		#{support}
+		LIMIT 1
+	</select>
+
+	<update id="updateContentId" parameterType="com.lifeix.cbs.contest.dto.yy.YyBet">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		contentId=#{contentId}
+		WHERE
+		id=#{id}
+	</update>
+
+	<update id="updateContentIdById">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		contentId=#{contentId}
+		WHERE
+		id=#{id} AND contentId is null
+	</update>
+
+
+	<update id="updateSettle">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		back=#{back}, status=#{status}
+		WHERE
+		id=#{id}
+	</update>
+
+	<select id="findYyBet" resultType="com.lifeix.cbs.contest.dto.yy.YyBet">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		<where>
+			<if test="contestId !=  null">
+				AND contestId = #{contestId}
+			</if>
+			<if test="userId !=  null">
+				AND userId= #{userId}
+			</if>
+			<if test="status !=  null">
+				AND status= #{status}
+			</if>
+			<if test="startId != null">
+				AND id &gt; #{startId}
+			</if>
+			ORDER BY id ASC
+			LIMIT #{limit}
+		</where>
+	</select>
+
+	<select id="findUserYyBet" resultType="com.lifeix.cbs.contest.dto.yy.YyBet">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		<where>
+			<if test="userId !=  null">
+				AND userId= #{userId}
+			</if>
+			<if test="startId != null">
+				AND id &gt; #{startId}
+			</if>
+			AND status= 0
+			ORDER BY id ASC 
+			LIMIT #{limit}
+		</where>
+	</select>
+
+	<select id="findYyBetList" resultType="com.lifeix.cbs.contest.dto.yy.YyBet">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		<where>
+			<if test="contestId !=  null">
+				AND contestId = #{contestId}
+			</if>
+			<if test="userId !=  null">
+				AND userId= #{userId}
+			</if>
+			<if test="status !=  null">
+				AND status= #{status}
+			</if>
+			<if test="startId != null">
+				AND id &lt; #{startId}
+			</if>
+			<if test="startTime != null">
+				AND createTime &gt; #{startTime}
+			</if>
+			<if test="endTime != null">
+				AND createTime &lt; #{endTime}
+			</if>
+		</where>
+		ORDER BY id DESC
+		LIMIT #{limit}
+	</select>
+
+    <select id="countUserMixBet" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        contestId = #{contestId}
+        AND userId=#{userId} 
+        AND isLongbi=TRUE 
+        AND coupon &gt; 0
+    </select>
+    
+</mapper>

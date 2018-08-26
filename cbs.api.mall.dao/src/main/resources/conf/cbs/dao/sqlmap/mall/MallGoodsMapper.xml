@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MallGoodsMapper">
+
+    <sql id="table_name">cbs_mall_goods</sql>
+
+    <insert id="insert" parameterType="com.lifeix.cbs.mall.dto.goods.MallGoods" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO
+        <include refid="table_name"/>
+        (categoryId,name,descr,path,pathMore,price,original,sales,stock,postage,status,type,exProp,sortIndex,createTime,updateTime)
+        values
+        (#{categoryId},#{name},#{descr},#{path},#{pathMore},#{price},#{original},#{sales},#{stock},#{postage},#{status},#{type},#{exProp},#{sortIndex},#{createTime},#{updateTime})
+    </insert>
+
+    <select id="findById" resultType="com.lifeix.cbs.mall.dto.goods.MallGoods">
+        SELECT
+        *
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="findMapByIds" resultType="com.lifeix.cbs.mall.dto.goods.MallGoods">
+        SELECT * FROM
+        <include refid="table_name"/>
+        WHERE id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="findGoodsByCategory" resultType="com.lifeix.cbs.mall.dto.goods.MallGoods">
+        SELECT
+        *
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        status = 1
+        <if test="startId != null">
+            AND sortIndex &lt; #{startId}
+        </if>
+        <if test="categoryId != null">
+            AND categoryId = #{categoryId}
+        </if>
+        ORDER BY sortIndex DESC
+        LIMIT #{limit}
+    </select>
+
+    <!--<select id="findGoods" resultType="com.lifeix.cbs.mall.dto.goods.MallGoods">-->
+        <!--SELECT-->
+        <!--*-->
+        <!--FROM-->
+        <!--<include refid="table_name"/>-->
+        <!--WHERE-->
+        <!--status = 1-->
+        <!--<if test="startId != null">-->
+            <!--AND id &lt; #{startId}-->
+        <!--</if>-->
+        <!--ORDER BY sortIndex DESC-->
+        <!--LIMIT #{limit}-->
+    <!--</select>-->
+
+    <select id="findGoodsInner" resultType="com.lifeix.cbs.mall.dto.goods.MallGoods">
+        SELECT
+        *
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        status != -1
+        <if test="categoryId != null">
+            AND categoryId = #{categoryId}
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="startId != null">
+            AND sortIndex &lt; #{startId}
+        </if>
+        ORDER BY sortIndex DESC
+        LIMIT #{limit}
+    </select>
+
+    <update id="update" parameterType="com.lifeix.cbs.mall.dto.goods.MallGoods">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="price != null">
+                price=#{price},
+            </if>
+            <if test="descr != null">
+                descr=#{descr},
+            </if>
+            <if test="path != null">
+                path=#{path},
+            </if>
+            <if test="pathMore != null">
+                pathMore=#{pathMore},
+            </if>
+            <if test="original != null">
+                original=#{original},
+            </if>
+            <if test="sales != null">
+                sales=#{sales},
+            </if>
+            <if test="stock != null">
+                stock=#{stock},
+            </if>
+            <if test="postage != null">
+                postage=#{postage},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="exProp != null">
+                exProp=#{exProp},
+            </if>
+            <if test="sortIndex != null">
+                sortIndex=#{sortIndex},
+            </if>
+            <if test="categoryId != null">
+                categoryId=#{categoryId},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <select id="isHasByCategory" resultType="boolean">
+        SELECT
+        1
+        FROM
+        <include refid="table_name" />
+        WHERE
+        categoryId = #{categoryId} AND status = 1
+        LIMIT 1
+    </select>
+
+</mapper>

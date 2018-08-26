@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GoldOrderMapper">
+	<select id="findById" resultType="com.lifeix.cbs.api.dto.gold.GoldOrder">
+		SELECT
+		orderId, 
+		userId, 
+		targetId, 
+		cardId, 
+		amount, 
+		obtain,
+		orderNO,
+		notifyId,
+		addedTime,
+		paidTime,
+		statu,
+		paymentId,
+		content,
+		ipAddress,
+		client
+		FROM cbs_gold_order  
+		WHERE 
+		orderId = #{orderId}
+		LIMIT 1
+	</select>
+	
+	<insert id="insertAndGetPrimaryKey" parameterType="com.lifeix.cbs.api.dto.gold.GoldOrder" useGeneratedKeys="true" keyProperty="orderId" >
+		INSERT INTO 
+		cbs_gold_order (userId, targetId, cardId, amount, obtain,orderNO,notifyId,addedTime,paidTime,statu,paymentId,content,ipAddress,client) 
+		VALUES (#{userId},#{targetId},#{cardId},#{amount},#{obtain},#{orderNO},#{notifyId},#{addedTime},#{paidTime},#{statu},#{paymentId},#{content},#{ipAddress},#{client})
+	</insert>
+	
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.gold.GoldOrder">
+		UPDATE  
+		cbs_gold_order 
+		SET 
+		userId=#{userId},
+		targetId=#{targetId}, 
+		cardId=#{cardId},
+	    amount=#{amount},
+		obtain=#{obtain} ,
+		orderNO=#{orderNO},
+		notifyId=#{notifyId},
+		addedTime=#{addedTime},
+		paidTime=#{paidTime},
+		statu=#{statu},
+		paymentId=#{paymentId},
+		content=#{content},
+		ipAddress=#{ipAddress},
+		client=#{client}
+		WHERE orderId = #{orderId}
+	</update>
+	
+	<delete id="delete" parameterType="com.lifeix.cbs.api.dto.gold.GoldOrder">
+		delete from cbs_gold_order where orderId = #{orderId}
+	</delete>
+	
+	<select id="findOrderByOrderNO" resultType="com.lifeix.cbs.api.dto.gold.GoldOrder">
+		select 
+		orderId, 
+		userId, 
+		targetId, 
+		cardId, 
+		amount, 
+		obtain,
+		orderNO,
+		notifyId,
+		addedTime,
+		paidTime,
+		statu,
+		paymentId,
+		content,
+		ipAddress,
+		client
+		FROM cbs_gold_order
+		where orderNO = #{orderNO}
+	</select>
+	
+	<select id="getOrderNumber" resultType="Long">
+		select count(*)
+		FROM cbs_gold_order
+		where userId = #{userId} and statu=#{statu}
+	</select>
+	
+	<select id="findOrderss" resultType="com.lifeix.cbs.api.dto.gold.GoldOrder">
+		select 
+		orderId, 
+		userId, 
+		targetId, 
+		cardId, 
+		amount, 
+		obtain,
+		orderNO,
+		notifyId,
+		addedTime,
+		paidTime,
+		statu,
+		paymentId,
+		content,
+		ipAddress,
+		client
+		FROM cbs_gold_order
+		where userId = #{userId} and statu = #{statu}
+		limit
+		<if test="start!=null">
+			#{start} ,
+		</if>
+		#{limit}
+	</select>
+	
+</mapper>

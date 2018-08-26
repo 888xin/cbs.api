@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MedalTaskMapper">
+	<select id="findById" resultType="com.lifeix.cbs.api.dto.rank.MedalTask">
+		SELECT
+		taskId,lastId,status,updateTime
+		FROM cbs_medal_task  
+		WHERE taskId = #{taskId}
+	</select>
+	
+	
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.rank.MedalTask">
+		UPDATE  
+		cbs_medal_task 
+		SET 
+		lastId=#{lastId}, status=#{status}, updateTime= now()
+		WHERE taskId = #{taskId}
+	</update>
+	
+</mapper>

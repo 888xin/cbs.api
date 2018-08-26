@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GoldStaticMapper">
+	<select id="findById" resultType="com.lifeix.cbs.api.dto.gold.GoldStatistic">
+		SELECT
+		id, 
+		year,
+		day,
+		income, 
+		outlay, 
+		total,
+		inCounts,
+		outCounts,
+		createTime
+		FROM cbs_gold_statistics  
+		WHERE 
+		id = #{id}
+		LIMIT 1
+	</select>
+	
+	<insert id="insertAndGetPrimaryKey" parameterType="com.lifeix.cbs.api.dto.gold.GoldStatistic" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO 
+		cbs_gold_statistics (year,day,income,outlay,total,inCounts,outCounts,createTime) 
+		VALUES (#{year},#{day},#{income},#{outlay},#{total},#{inCounts},#{outCounts},#{createTime})
+	</insert>
+	
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.gold.GoldStatistic">
+		UPDATE  
+		cbs_gold_statistics 
+		SET 
+		year=#{year},day=#{day}, income=#{income}, outlay=#{outlay},total=#{total} ,inCounts=#{inCounts},outCounts=#{outCounts},createTime=#{createTime}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from cbs_gold_statistics where id = #{id}
+	</delete>
+	
+	<select id="findByTime" resultType="com.lifeix.cbs.api.dto.gold.GoldStatistic">
+		SELECT
+		id, 
+		year,
+		day,
+		income, 
+		outlay, 
+		total,
+		inCounts,
+		outCounts,
+		createTime
+		FROM cbs_gold_statistics  
+		WHERE 
+		year = #{year} and day = #{day}
+		LIMIT 1
+	</select>
+	
+	<select id="findBetweenTime" resultType="com.lifeix.cbs.api.dto.gold.GoldStatistic">
+		SELECT
+		id, 
+		year,
+		day,
+		income, 
+		outlay, 
+		total,
+		inCounts,
+		outCounts,
+		createTime
+		FROM cbs_gold_statistics  
+		WHERE 
+		<if test="endYear == beginYear">
+			year = #{endYear} and  day &gt; #{beginDay} and day &lt; #{endDay}
+		</if>
+		<if test="endYear > beginYear">
+			(year = #{beginYear} and day &gt; #{beginDay}) OR (year = #{endYear} and day &lt; #{endDay})
+		</if>
+		
+	</select>
+	
+</mapper>

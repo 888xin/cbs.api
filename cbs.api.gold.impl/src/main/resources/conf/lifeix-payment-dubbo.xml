@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+    
+    <dubbo:reference id="payAccountService" interface="com.lifeix.payment.dubbo.service.PayAccountService"  version="${zookeeper.payment.version}"/>
+	
+	<dubbo:reference id="payAccountLogService" interface="com.lifeix.payment.dubbo.service.PayAccountLogService"  version="${zookeeper.payment.version}"/>
+	
+	<dubbo:reference id="payAccountOrderService" interface="com.lifeix.payment.dubbo.service.PayAccountOrderService"  version="${zookeeper.payment.version}">
+	    <dubbo:method name="build" timeout="5000"/>
+	</dubbo:reference>
+	
+</beans>

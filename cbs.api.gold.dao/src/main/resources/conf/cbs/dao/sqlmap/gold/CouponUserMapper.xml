@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CouponUserMapper">
+
+	<sql id="TABLE_NAME">cbs_coupon_user</sql>
+
+	<sql id="SELECT_COLUMN">id,userId,couponId,proportion,price,used,startTime,endTime,updateTime
+	</sql>
+
+	<update id="updateNotifyFlagByIds">
+		UPDATE
+		<include refid="TABLE_NAME" />
+		SET
+		notifyFlag=#{notifyFlag}
+		WHERE
+		<foreach collection="ids" item="id" open="(" close=")"
+			separator="OR">
+			id=#{id}
+		</foreach>
+	</update>
+
+	<select id="findMessage" resultType="com.lifeix.cbs.api.dto.coupon.CouponUser">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TABLE_NAME" />
+		WHERE
+		notifyFlag = #{notifyFlag}
+		and endTime <![CDATA[<=]]> #{endTime}
+		
+		<if test="startId != null">
+			AND id <![CDATA[>]]>
+			#{startId}
+		</if>
+		ORDER BY id
+		LIMIT #{limit}
+	</select>
+
+	<select id="findPigeonMess" resultType="com.lifeix.cbs.api.dto.coupon.CouponUser">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TABLE_NAME" />
+		WHERE
+			used = #{used}
+		AND endTime BETWEEN now() AND #{endTime}
+		<if test="startId != null">
+			AND id <![CDATA[>]]>
+			#{startId}
+		</if>
+		ORDER BY id
+		LIMIT #{limit}
+	</select>
+
+	<select id="selectById" resultType="com.lifeix.cbs.api.dto.coupon.CouponUser">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TABLE_NAME" />
+		WHERE
+		id = #{id}
+		LIMIT 1
+	</select>
+
+	<insert id="insertAndGetPrimaryKey" parameterType="com.lifeix.cbs.api.dto.coupon.CouponUser"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		<include refid="TABLE_NAME" />
+		(userId, couponId, proportion, price, used, startTime, endTime,
+		updateTime)
+		VALUES
+		(#{userId},#{couponId},#{proportion},#{price},#{used},#{startTime},#{endTime},#{updateTime})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.coupon.CouponUser">
+		UPDATE
+		<include refid="TABLE_NAME" />
+		SET
+		used=#{used}, updateTime=#{updateTime}
+		WHERE
+		id = #{id}
+	</update>
+
+	<select id="findUserActiveCoupon" resultType="com.lifeix.cbs.api.dto.coupon.CouponUser">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TABLE_NAME" />
+		WHERE
+		userId = #{userId}
+		AND
+		used = FALSE
+		AND
+		endTime &gt; #{endTime}
+		<if test="filterPrice != null">
+			<foreach collection="filterPrice" item="item" open="AND ("
+				close=")" separator="OR">
+				price = #{item}
+			</foreach>
+		</if>
+		<if test="startId != null">
+			AND id &lt; #{startId}
+		</if>
+		ORDER BY id DESC
+		LIMIT #{limit}
+	</select>
+
+	<select id="findUserExpiredCoupons" resultType="com.lifeix.cbs.api.dto.coupon.CouponUser">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TABLE_NAME" />
+		WHERE
+		userId = #{userId}
+		AND
+		used = FALSE
+		AND endTime &lt; #{endTime}
+		<if test="startId != null">
+			AND id &lt; #{startId}
+		</if>
+		ORDER BY id DESC
+		LIMIT #{limit}
+	</select>
+
+	<select id="findCouponUsersByIds" resultType="com.lifeix.cbs.api.dto.coupon.CouponUser">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TABLE_NAME" />
+		WHERE
+		id IN
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</select>
+
+	<insert id="insertByBatch">
+		INSERT INTO
+		<include refid="TABLE_NAME" />
+		(userId, couponId, proportion, price, used, startTime, endTime,
+		updateTime)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.userId},#{item.couponId},#{item.proportion},#{item.price},#{item.used},#{item.startTime},#{item.endTime},#{item.updateTime})
+		</foreach>
+	</insert>
+
+</mapper>

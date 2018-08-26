@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MallExpressMapper">
+
+    <sql id="table_name">cbs_mall_express</sql>
+    
+	<insert id="insert" parameterType="com.lifeix.cbs.mall.dto.order.MallExpress">
+		INSERT INTO
+		<include refid="table_name" />
+		(orderId,userId,expressType,expressNO,state,expressInfo,createTime)
+		VALUES
+		(#{orderId},#{userId},#{expressType},#{expressNO},#{state},#{expressInfo},#{createTime})
+	</insert>
+	
+    <update id="update" parameterType="com.lifeix.cbs.mall.dto.order.MallExpress">
+		UPDATE 
+		<include refid="table_name" />
+		SET
+		userId = #{userId}, expressType = #{expressType}, expressNO = #{expressNO}, state = #{state}, expressInfo = #{expressInfo}
+		WHERE 
+		orderId = #{orderId}
+	</update>
+	
+    <select id="findById" resultType="com.lifeix.cbs.mall.dto.order.MallExpress">
+        SELECT orderId,userId,expressType,expressNO,state,expressInfo,createTime,updateTime
+		FROM
+        <include refid="table_name"/>
+        WHERE 
+        	orderId = #{orderId}
+    </select>
+    
+    <select id="findByExpressNO" resultType="com.lifeix.cbs.mall.dto.order.MallExpress">
+        SELECT orderId,userId,expressType,expressNO,state,expressInfo,createTime,updateTime
+		FROM
+        <include refid="table_name"/>
+        WHERE 
+		expressType=#{expressType} AND expressNO = #{expressNO} 
+    </select>    
+    
+    <select id="findListByCreateTime" resultType="com.lifeix.cbs.mall.dto.order.MallExpress">
+        SELECT  orderId,userId,expressType,expressNO,state,expressInfo,createTime,updateTime
+        FROM
+        <include refid="table_name"/>
+        WHERE 
+        	createTime &gt;#{createTime}
+        <if test="state!=null">
+			AND state = #{state}
+		</if>
+		ORDER BY
+        	createTime DESC
+    </select>
+    
+    <select id="findListByUpdateTime" resultType="com.lifeix.cbs.mall.dto.order.MallExpress">
+        SELECT  orderId,userId,expressType,expressNO,state,expressInfo,createTime,updateTime
+        FROM
+        <include refid="table_name"/>
+        WHERE 
+        	updateTime &gt;#{updateTime}
+        <if test="state!=null">
+			AND state = #{state}
+		</if>
+		ORDER BY
+        	updateTime DESC
+    </select>
+    
+    <select id="findByUserId" resultType="com.lifeix.cbs.mall.dto.order.MallExpress">
+        SELECT orderId,userId,expressType,expressNO,state,expressInfo,createTime,updateTime
+		FROM
+        <include refid="table_name"/>
+        WHERE userId = #{userId}
+        <if test="state != null">
+			AND state = #{state}
+		</if>
+		<if test="startId != null">
+			AND startId &lt;#{startId}
+		</if>
+		ORDER BY 
+        updateTime DESC
+		LIMIT #{limit}
+    </select>
+    
+  
+	
+</mapper>

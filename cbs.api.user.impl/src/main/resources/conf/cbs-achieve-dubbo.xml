@@ -1,0 +1,18 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+ http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 成就 -->
+	<dubbo:reference id="achieveService" interface="com.lifeix.cbs.achieve.service.AchieveService" version="1.1.0">
+		<dubbo:method name="addAchieveData" timeout="30000" async="true" />
+	</dubbo:reference>
+
+	<!-- 社区 -->
+	<dubbo:reference id="messageService" interface="com.lifeix.community.message.service.MessageService" version="1.1.0">
+	</dubbo:reference>
+	
+	<!-- 授权  -->
+	<dubbo:reference id="accountAuthAction" interface="com.lifeix.user.api.action.account.AccountAuthAction" version="1.1.0">
+    </dubbo:reference>
+</beans>

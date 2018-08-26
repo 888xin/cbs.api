@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserContestStatisticsWeekMapper">
+
+
+	<sql id="TAB_NAME">cbs_user_contest_statistics_week</sql>
+	
+	<sql id="SELECT_COLUMN">userId,year,week,betCount,winCount,profit,drawCount,lossCount,winning,conWinCount,conLossCount,winOdds,lossOdds,betGold,winGold,lossGold,roi,score,lockerId</sql>
+	
+	<select id="findById" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatisticsWeek">
+		SELECT 
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		userId =#{userId}  
+		AND 
+		year = #{year} 
+		AND 
+		week = #{week}
+		LIMIT 1
+	</select>
+	
+	<select id="findByIds" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatisticsWeek">
+		SELECT 
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		userId IN
+		<foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		AND 
+		year = #{year} 
+		AND 
+		week = #{week}
+		LIMIT 100
+	</select>
+	
+	
+	<select id="findByUser" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatisticsWeek">
+		SELECT 
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		userId =#{userId} 
+		<if test="startYear == endYear ">
+			AND year = #{startYear} 
+			AND week &gt;= #{startWeek}
+			AND week &lt;= #{endWeek}
+		</if>
+		<if test="endYear > startYear ">
+			(AND year &gt;= #{startYear} AND week &gt;= #{startWeek}) 
+			OR 
+			(AND year &lt;= #{endYear} AND week &lt;= #{endWeek})
+		</if>
+		ORDER BY year,week 
+		LIMIT #{limit}
+	</select>
+
+	<select id="findByTime" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatisticsWeek">
+		SELECT 
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		year = #{year} 
+		AND 
+		week = #{week}
+		ORDER BY roi DESC  
+		LIMIT #{start},#{limit}
+	</select>
+
+
+	<insert id="insert" parameterType="com.lifeix.cbs.api.dto.rank.UserContestStatisticsWeek" useGeneratedKeys="true" keyProperty="userId">
+		INSERT INTO
+		<include refid="TAB_NAME" /> 
+		(userId,year,week,betCount,winCount,drawCount, lossCount,winning,conWinCount,conLossCount,winOdds,lossOdds,betGold,profit,winGold,lossGold,roi,score,lockerId)
+		VALUES
+		(#{userId},#{year},#{week},#{betCount},#{winCount},#{drawCount},
+		#{lossCount},#{winning},#{conWinCount},#{conLossCount},#{winOdds},#{lossOdds},#{betGold},#{profit},
+		#{winGold},#{lossGold},#{roi},#{score},#{lockerId})
+	</insert>
+
+	<update id="updateWithLockerId" parameterType="com.lifeix.cbs.api.dto.rank.UserContestStatisticsWeek">
+		UPDATE
+		<include refid="TAB_NAME" /> 
+		SET
+		betCount=#{betCount}, winCount=#{winCount}, drawCount=#{drawCount}, lossCount=#{lossCount}, winning=#{winning}, 
+		conWinCount=#{conWinCount}, conLossCount=#{conLossCount}, winOdds=#{winOdds}, lossOdds=#{lossOdds}, betGold=#{betGold}, winGold=#{winGold}, 
+		lossGold=#{lossGold}, roi=#{roi},profit=#{profit}, score=#{score}, lockerId=#{lockerId} 
+		WHERE userId=#{userId} AND year=#{year} AND week=#{week} AND lockerId=#{lastLockerId}
+	</update>
+	
+	
+	<!-- 获取下单不少于5场的回报率 -->
+	<select id="findRoiMap" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatisticsWeek">
+		SELECT
+		userId,
+		roi
+		FROM 
+		<include refid="TAB_NAME" /> 
+		WHERE 
+		betCount  &gt;= 5 
+		AND 
+		year = #{year} 
+		AND 
+		week = #{week}
+		ORDER BY roi DESC
+		limit 100
+	</select>
+	
+	<!-- 获取下单不少于5场的胜率 -->
+	<select id="findWinningMap" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatisticsWeek">
+		SELECT
+		userId,
+		winning
+		<include refid="TAB_NAME" /> 
+		WHERE 
+		betCount  &gt;= 5 
+		AND 
+		year = #{year} 
+		AND 
+		week = #{week}
+		ORDER BY winning DESC
+		limit 100
+	</select>
+
+</mapper>

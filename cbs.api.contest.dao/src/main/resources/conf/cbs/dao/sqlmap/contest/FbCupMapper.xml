@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FbCupMapper">
+	
+	<sql id="TAB_NAME">cbs_fb_cup</sql>
+	
+	<insert id="saveCup" parameterType="java.util.List">
+		INSERT IGNORE INTO 
+		<include refid="TAB_NAME" />  
+			(targetId, name, nameFull, nameEN, color, countryId, country, level, type) 
+		VALUES 
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.targetId},#{item.name},#{item.nameFull},#{item.nameEN},
+			#{item.color},#{item.countryId},#{item.country},#{item.level},#{item.type}) 
+		</foreach>
+	</insert>
+	
+	
+<!-- 	<insert id="saveCup" parameterType="java.util.List"> -->
+<!-- 		INSERT INTO  -->
+<!-- 		<include refid="TAB_NAME" />
+				(targetId, name, nameFull, nameEN, color, countryId, country, level, type)  -->
+<!-- 		VALUES  -->
+<!-- 		<foreach collection="list" item="item" index="index" separator=","> -->
+<!-- 			(#{item.targetId},#{item.name},#{item.nameFull},#{item.nameEN}, -->
+<!-- 			#{item.color},#{item.countryId},#{item.country},#{item.level},#{item.type})  -->
+<!-- 		</foreach> -->
+<!-- 		ON DUPLICATE KEY UPDATE  -->
+<!-- 			color = VALUES(color)  -->
+<!-- 	</insert> -->
+	
+	<select id="getAllCup" resultType="com.lifeix.cbs.contest.dto.fb.FbCup">
+		SELECT  
+		cupId,targetId,name,nameFull,nameEN,color,countryId,country,level,type  
+		FROM 
+		<include refid="TAB_NAME" />   
+	</select>
+	
+	<select id="getCupByTargetIds" resultType="com.lifeix.cbs.contest.dto.fb.FbCup">
+		SELECT  
+		cupId,targetId,name,nameFull,nameEN,color,countryId,country,level,type  
+		FROM 
+		<include refid="TAB_NAME" />  
+		WHERE targetId IN 
+		 <foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
+	        #{item}   
+	    </foreach> 
+	</select>
+
+    <select id="getLevelCup" resultType="com.lifeix.cbs.contest.dto.fb.FbCup">
+        SELECT
+        targetId,name
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        level = #{level}
+    </select>
+	
+	
+	 <update id="updateName" parameterType="com.lifeix.cbs.contest.dto.fb.FbCup">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		name=#{name}    
+		WHERE 
+		cupId=#{cupId}
+	</update>
+	
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.fb.FbCup">
+		SELECT
+	    cupId,targetId,name,nameFull,nameEN,color,countryId,country,level,type 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		cupId = #{cupId}
+		LIMIT 1
+	</select>
+</mapper>

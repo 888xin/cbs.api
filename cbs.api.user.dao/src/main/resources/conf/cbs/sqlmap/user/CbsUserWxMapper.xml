@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CbsUserWxMapper">
+	<select id="selectById" resultType="com.lifeix.cbs.api.dto.user.CbsUserWx">
+		SELECT
+			userId,
+			openId,
+			appId,
+			source,
+			createTime
+			FROM cbs_user_wx
+		WHERE
+			userId = #{userId}
+			LIMIT 1
+	</select>
+
+	<select id="findByIds" resultType="com.lifeix.cbs.api.dto.user.CbsUserWx">
+       SELECT
+			userId,
+			openId,
+			appId,
+			source,
+			createTime
+        FROM
+       		cbs_user_wx
+		WHERE userId IN
+        <foreach item="item" index="index" collection="userIds"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+	
+	<insert id="insertAndGetPrimaryKey" parameterType="com.lifeix.cbs.api.dto.user.CbsUserWx">
+		INSERT INTO
+		cbs_user_wx (userId, openId, appId, source, createTime)
+		VALUES (#{userId},#{openId},#{appId},#{source},#{createTime})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.user.CbsUserWx">
+		UPDATE
+			cbs_user_wx
+		SET
+			openId=#{openId},
+			appId=#{appId},
+			source=#{source},
+			createTime=#{createTime}
+		WHERE userId = #{userId}
+	</update>
+</mapper>

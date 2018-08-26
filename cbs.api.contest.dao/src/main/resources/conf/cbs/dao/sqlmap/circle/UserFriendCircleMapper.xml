@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserFriendCircleMapper">
+
+	<sql id="TAB_NAME">cbs_fb_team</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.circle.UserFriendCircle">
+		SELECT
+		userId,
+		friendCircleId,type,deleteFlag,hasContent
+		from cbs_friend_circle_user
+		where userId = #{userId}
+	</select>
+
+
+	<select id="getUserFriendCircleIds" resultType="long">
+		SELECT
+		friendCircleId
+		from cbs_friend_circle_user
+		where
+		userId in
+		<foreach item="item" index="index" collection="targetIds"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+
+		<if test="hasContent != null">
+			and hasContent = #{hasContent}
+		</if>
+
+		<if test="type != null">
+			and type = #{type}
+		</if>
+
+		and deleteFlag = 0
+		order by friendCircleId desc
+		limit #{start}, #{limit}
+	</select>
+
+	<select id="getUserFriendCircle" resultType="com.lifeix.cbs.contest.dto.circle.UserFriendCircle">
+		SELECT
+		*
+		from
+		cbs_friend_circle_user
+		where friendCircleId = #{friendCircleId}
+		limit 1
+	</select>
+
+	<update id="deleteByfriendCircleId">
+		update cbs_friend_circle_user
+		set deleteFlag = 1
+		where
+		friendCircleId = #{friendCircleId}
+	</update>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.circle.UserFriendCircle">
+		INSERT INTO cbs_friend_circle_user
+		(userId,friendCircleId,type,deleteFlag,hasContent)
+		values
+		<foreach separator="," collection="msgs" index="index" item="item">
+			(#{item.userId},#{item.friendCircleId},#{item.type},#{item.deleteFlag},#{item.hasContent})
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.circle.UserFriendCircle">
+		UPDATE
+		cbs_friend_circle_user
+		SET type=#{type}, deleteFlag=#{deleteFlag}, hasContent=#{hasContent}
+		WHERE userId= #{userId} and friendCircleId=#{friendCircleId}
+	</update>
+
+</mapper>

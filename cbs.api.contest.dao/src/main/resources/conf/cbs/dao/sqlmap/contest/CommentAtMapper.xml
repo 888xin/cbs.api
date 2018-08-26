@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CommentAtMapper">
+
+	<sql id="TAB_NAME">cbs_contest_at</sql>
+	
+	<insert id="insertAndGetPrimaryKey" parameterType="com.lifeix.cbs.contest.dto.comment.CommentAt"
+		useGeneratedKeys="true" keyProperty="id">
+		REPLACE INTO
+		<include refid="TAB_NAME" />
+		(contestId, sendUserId, acceptUserId,content, createTime,status, ipaddress,client)
+		VALUES
+		(#{contestId},#{sendUserId},#{acceptUserId},#{content},#{createTime},#{status},#{ipaddress},#{client})
+	</insert>
+
+	<select id="getById" resultType="com.lifeix.cbs.contest.dto.comment.CommentAt">
+		SELECT
+		*
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE id = #{id}
+	</select>
+
+</mapper>

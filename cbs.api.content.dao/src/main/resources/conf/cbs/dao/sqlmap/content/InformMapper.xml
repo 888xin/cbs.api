@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InformMapper">
+
+
+	<sql id="TAB_NAME">cbs_inform</sql>
+	
+	<!-- 举报列表 -->
+	<select id="selectList" resultType="com.lifeix.cbs.content.dto.inform.Inform">
+		SELECT
+			id,
+			type,
+			containId,
+			contain,
+			image,
+			userId,
+			informerId,
+			informType,
+			informReason,
+			status,
+			disposeInfo,
+			total,
+			updateTime,
+			removeTime
+		FROM
+			<include refid="TAB_NAME" />
+		WHERE
+			1=1 AND type=#{type}
+		<if test="status!=null">
+			AND status = #{status}
+		</if>
+		ORDER BY updateTime DESC
+		LIMIT #{page},#{limit}
+			
+	</select>
+
+	<!-- 根据主键查找 -->
+	<select id="selectById" resultType="com.lifeix.cbs.content.dto.inform.Inform">
+		SELECT
+			id,
+			type,
+			containId,
+			contain,
+			image,
+			userId,
+			informerId,
+			informType,
+			informReason,
+			status,
+			disposeInfo,
+			total,
+			updateTime,
+			removeTime
+		FROM
+			<include refid="TAB_NAME" />
+		WHERE
+		    id=#{id}
+	</select>
+	
+	<!-- 根据被举报内容id查找 -->
+	<select id="selectByContaintId" resultType="com.lifeix.cbs.content.dto.inform.Inform">
+		SELECT
+			id,
+			type,
+			containId,
+			contain,
+			image,
+			userId,
+			informerId,
+			informType,
+			informReason,
+			status,
+			disposeInfo,
+			total,
+			updateTime,
+			removeTime
+		FROM
+			<include refid="TAB_NAME" />
+		WHERE
+			containId=#{containId} and type=#{type}
+		<if test="status!=null">
+			and status=#{status}
+		</if>
+	</select>
+	
+	<!-- 新增被举报评论 -->
+	<insert id="insertInform" parameterType="com.lifeix.cbs.content.dto.inform.Inform"
+		 useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+			<include refid="TAB_NAME" />
+		    (type,containId,contain,image,userId,informerId,informType,informReason,status,disposeInfo,total,updateTime,removeTime)
+		VALUES
+			(#{type},#{containId},#{contain},#{image},#{userId},#{informerId},#{informType},#{informReason},#{status},#{disposeInfo},#{total},#{updateTime},#{removeTime})
+	</insert>
+	
+	<!-- 更新评论举报 -->
+	<update id="updateInform">
+		UPDATE
+			<include refid="TAB_NAME" />
+		SET
+			total=#{total},informType=#{informType},informReason=#{informReason}
+		WHERE
+			id=#{id}
+	</update>
+	
+	<!-- 更新被举报评论处理状态 -->
+	<update id="updateStatusById">
+		UPDATE
+			<include refid="TAB_NAME" />
+		SET
+			status=#{status},disposeInfo=#{disposeInfo}
+			<if test="status!=null">
+				,removeTime = #{removeTime}
+			</if>
+		WHERE
+			id=#{id}
+	</update>
+	
+	<!-- 批量更新被举报评论处理状态 -->
+	<update id="updateStatusByIds">
+		UPDATE
+			<include refid="TAB_NAME" />
+		SET
+			status=#{status},disposeInfo=#{disposeInfo}
+		WHERE
+			<foreach collection="ids" item="id" open="(" close=")" separator="OR">
+				id=#{id}
+			</foreach>
+	</update>
+	
+	
+	
+	<delete id="deleteById">
+		DELETE FROM
+			<include refid="TAB_NAME" />
+		WHERE 
+			id=#{id}
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

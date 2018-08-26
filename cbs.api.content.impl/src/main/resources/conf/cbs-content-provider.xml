@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+    
+    <!-- 生肖游戏 -->
+	<dubbo:service interface="com.lifeix.cbs.content.service.spark.game.ZodiacAnimalDubbo" ref="zodiacAnimalDubbo" ></dubbo:service>
+    <bean id="zodiacAnimalDubboImpl" class="com.lifeix.cbs.content.impl.spark.game.ZodiacAnimalDubboImpl" />
+    
+</beans>

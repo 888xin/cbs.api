@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CbsPushCountMapper">
+
+	<sql id="table_name">cbs_push_count</sql>
+
+	<sql id="selectId">
+		pushId,userId,count,params,createTime,sentTime,sent
+	</sql>
+
+
+	<insert id="replace" parameterType="com.lifeix.cbs.message.dto.push.CbsPushCount"
+		useGeneratedKeys="true" keyProperty="pushId">
+		REPLACE INTO
+		<include refid="table_name" />
+		(
+		userId,count,params,createTime,sentTime,sent
+		)
+		values
+		(#{userId},#{count},#{params},#{createTime},#{sentTime},#{sent})
+	</insert>
+
+	<select id="findRoiPushs" resultType="com.lifeix.cbs.message.dto.push.CbsPushCount">
+		SELECT
+		<include refid="selectId" />
+		FROM
+		<include refid="table_name" />
+		WHERE sent=FALSE
+		order by pushId ASC
+		limit #{limit}
+	</select>
+	
+	
+	<update id="update" parameterType="com.lifeix.cbs.message.dto.push.CbsPushCount">
+		update
+		<include refid="table_name" />
+		 SET sentTime= #{sentTime}, sent=#{sent}
+		 WHERE pushId=#{pushId}
+	</update>
+	
+</mapper>

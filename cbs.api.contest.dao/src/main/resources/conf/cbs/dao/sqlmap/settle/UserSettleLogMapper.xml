@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserSettleLogMapper">
+
+	<sql id="TAB_NAME">cbs_user_settle_log</sql>
+
+	<select id="findUserSettleListById" resultType="com.lifeix.cbs.contest.dto.settle.UserSettleLog">
+		SELECT
+		id,userId,type AS
+		contestType,contestId,isLongbi,playId,payLogId,support,odds,bet,back,status,contentId,contestTime,createTime
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE id > #{id}
+		<if test="isLongbi !=  null">
+			AND isLongbi=#{isLongbi}
+		</if>
+		order by id ASC limit 0, #{limit}
+	</select>
+
+
+	<select id="findByIds" resultType="com.lifeix.cbs.contest.dto.settle.UserSettleLog">
+		SELECT
+		id,userId,type AS
+		contestType,contestId,isLongbi,playId,payLogId,support,odds,bet,back,status,contentId,contestTime,createTime
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		and id in
+		<foreach item="item" index="index" collection="ids" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+
+
+
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.settle.UserSettleLog">
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(userId,type,contestId,isLongbi,playId,payLogId,support,odds,bet,back,status,contentId,contestTime,createTime)
+		VALUES
+		(#{userId},#{contestType},#{contestId},#{isLongbi},#{playId},#{payLogId},#{support},#{odds},#{bet},#{back},#{status},#{contentId},#{contestTime},#{createTime})
+	</insert>
+
+	<select id="findById" resultType="com.lifeix.cbs.contest.dto.settle.UserSettleLog">
+		SELECT
+		id,userId,type
+		contestType,contestId,isLongbi,playId,payLogId,support,odds,bet,back,status,contentId,contestTime,createTime
+		FROM cbs_user_settle_log
+		WHERE id = #{id}
+	</select>
+
+	<select id="getUserSettleLogs" resultType="com.lifeix.cbs.contest.dto.settle.UserSettleLog">
+		SELECT
+		id,userId,type AS
+		contestType,contestId,isLongbi,playId,payLogId,support,odds,bet,back,status,contentId,contestTime,createTime
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE 1=1
+		<if test="userId !=  null">
+			and userId = #{userId}
+		</if>
+		AND contestTime BETWEEN #{startTime} AND #{endTime}
+		ORDER BY id desc
+		LIMIT #{page}, #{limit}
+	</select>
+
+	<select id="getUserSettleLogCounts" resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		userId = #{userId}
+		AND contestTime BETWEEN #{startTime} AND
+		#{endTime}
+		AND status = #{status}
+	</select>
+
+	<select id="getUserSettleLog" resultType="com.lifeix.cbs.contest.dto.settle.UserSettleLog">
+		SELECT
+		id,userId,type AS
+		contestType,contestId,isLongbi,playId,payLogId,support,odds,bet,back,status,contentId,contestTime,createTime
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE 1=1
+		and userId = #{userId}
+		AND type = #{type}
+		AND contestId =
+		#{contestId}
+		AND playId = #{playId}
+		AND support = #{support}
+		LIMIT 1
+	</select>
+
+
+    <delete id="deleteByContestId">
+        DELETE
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        type = #{type}
+        AND contestId = #{contestId}
+    </delete>
+
+
+</mapper>

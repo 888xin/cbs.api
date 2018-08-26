@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CbsUserMapper">
+	<select id="selectById" resultType="com.lifeix.cbs.api.dto.user.CbsUser">
+		SELECT
+		userId,
+		userNo,
+		userName,
+		namePinyin,
+		userPath,
+		mobilePhone,
+		gender,
+		status,
+		local,
+		aboutme,
+		back,
+		createTime
+		FROM cbs_user
+		WHERE
+		userId = #{userId}
+		LIMIT 1
+	</select>
+
+
+	<select id="selectByLongNO" resultType="com.lifeix.cbs.api.dto.user.CbsUser">
+		SELECT
+		userId,
+		userNo,
+		userName,
+		namePinyin,
+		userPath,
+		mobilePhone,
+		gender,
+		status,
+		local,
+		aboutme,
+		back,
+		createTime
+		FROM cbs_user
+		WHERE
+		userNo = #{userNo}
+		LIMIT 1
+	</select>
+
+	<insert id="insertAndGetPrimaryKey" parameterType="com.lifeix.cbs.api.dto.user.CbsUser"
+		useGeneratedKeys="true" keyProperty="userId">
+		INSERT INTO
+		cbs_user (userId, userNo, userName, namePinyin, userPath,
+		mobilePhone, gender, status, local, aboutme, back, createTime)
+		VALUES (#{userId},#{userNo},#{userName},#{namePinyin},#{userPath},
+		#{mobilePhone},#{gender},#{status},#{local},#{aboutme},#{back},#{createTime})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.user.CbsUser">
+		UPDATE
+		cbs_user
+		SET
+		userNo=#{userNo},
+		userName=#{userName},namePinyin=#{namePinyin},mobilePhone=#{mobilePhone},
+		userPath=#{userPath},
+		gender=#{gender}, status=#{status}, local=#{local}, aboutme=#{aboutme}, back=#{back}
+		WHERE userId = #{userId}
+	</update>
+
+	<update id="deleteById">
+		DELETE FROM cbs_user
+		WHERE userId = #{userId}
+	</update>
+
+
+	<select id="selectByIds" resultType="com.lifeix.cbs.api.dto.user.CbsUser">
+		SELECT
+		userId,
+		userNo,
+		userName,
+		namePinyin,
+		userPath,
+		mobilePhone,
+		gender,
+		status,
+		local,
+		aboutme,
+		back,
+		createTime
+		FROM cbs_user
+		WHERE userId IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectByMobile" resultType="com.lifeix.cbs.api.dto.user.CbsUser">
+		SELECT
+		userId,
+		userNo,
+		userName,
+		namePinyin,
+		userPath,
+		mobilePhone,
+		gender,
+		status,
+		local,
+		aboutme,
+		back,
+		createTime
+		FROM cbs_user
+		WHERE mobilePhone IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ZodiacAnimalBetMapper">
+
+    <sql id="table_name">cbs_game_play</sql>
+
+    <insert id="insert" parameterType="com.lifeix.cbs.content.dto.game.ZodiacAnimalBet" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="table_name"/>
+        (gameId,userId,bet,betSum,backSum,isLongbi,createTime,updateTime)
+        VALUES
+        (#{gameId},#{userId},#{bet},#{betSum},#{backSum},#{isLongbi},#{createTime},#{updateTime})
+    </insert>
+
+    <select id="findZodiacAnimalBets" resultType="com.lifeix.cbs.content.dto.game.ZodiacAnimalBet">
+        SELECT
+        *
+        FROM
+        <include refid="table_name"/>
+        <where>
+            <if test="userId != null">
+                AND userId = #{userId}
+            </if>
+            <if test="startId != null">
+                AND id &lt; #{startId}
+            </if>
+            <if test="status != null">
+                AND (status = 1 OR status = 2)
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="findZodiacAnimalBetsByGameId" resultType="com.lifeix.cbs.content.dto.game.ZodiacAnimalBet">
+        SELECT
+        *
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        gameId = #{gameId}
+        ORDER BY id DESC
+    </select>
+
+
+    <update id="update">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="backSum != null">
+                backSum = #{backSum},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="lottery != null">
+                lottery = #{lottery},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+
+</mapper>

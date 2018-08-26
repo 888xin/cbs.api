@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FrontCardMapper">
+
+    <sql id="table_name">cbs_front_card</sql>
+	
+    <select id="findById" resultType="com.lifeix.cbs.content.dto.frontpage.FrontCard">
+        SELECT * FROM
+        <include refid="table_name"/>
+        WHERE id = #{id}
+    </select>
+    
+    <select id="findList" resultType="com.lifeix.cbs.content.dto.frontpage.FrontCard">
+        SELECT * FROM
+        <include refid="table_name"/>
+    </select>
+	
+</mapper>

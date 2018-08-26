@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CbsMarketDayStatisticMapper">
+
+	<sql id="TAB_NAME">cbs_market_day_statistic</sql>
+
+	<sql id="SELECT_COLUMN">id,marketCode,statisticDate,maleNums,femaleNums,totalNums
+	</sql>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.api.dto.market.CbsMarketDayStatistic">
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(marketCode,statisticDate,maleNums,femaleNums,totalNums)
+		VALUES
+		(#{marketCode},#{statisticDate},#{maleNums},#{femaleNums},#{totalNums})
+	</insert>
+
+
+
+	<select id="findList" resultType="com.lifeix.cbs.api.dto.market.CbsMarketDayStatistic">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		<where>
+			<if test="marketCode != null">
+				AND marketCode = #{marketCode}
+			</if>
+			<if test="startId != null">
+				AND id <![CDATA[<]]> #{startId}
+			</if>
+			<if test="statisticDateBefore != null" >
+				AND statisticDate  <![CDATA[>=]]> #{statisticDateBefore}
+			</if>
+
+			<if test="statisticDateAfter != null">
+				AND statisticDate <![CDATA[<=]]> #{statisticDateAfter}
+			</if>
+
+		</where>
+		order by id desc
+		LIMIT #{limit}
+	</select>
+
+</mapper>

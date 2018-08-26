@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MallOrderMapper">
+
+    <sql id="TAB_NAME">cbs_mall_order</sql>
+
+    <insert id="insert" parameterType="com.lifeix.cbs.mall.dto.order.MallOrder">
+        INSERT INTO
+        <include refid="TAB_NAME"/>
+        (userId, goodsId, goodsPrice, goodsNum, postage, amount, orderAddress, status, goodsPro, userRemark,  createTime, logId)
+        VALUES 
+        (#{userId},#{goodsId},#{goodsPrice},#{goodsNum},#{postage},#{amount},#{orderAddress},#{status},#{goodsPro},#{userRemark},#{createTime},#{logId})
+    </insert>
+
+    <update id="update" parameterType="com.lifeix.cbs.mall.dto.order.MallOrder">
+        UPDATE 
+        <include refid="TAB_NAME"/>
+        SET 
+        status=#{status}, cancelReason=#{cancelReason}, shopTime=#{shopTime}, doneTime=#{doneTime}, lockId=lockId+1
+        WHERE
+        id = #{id} AND lockId=#{lockId} 
+    </update>
+    
+    <select id="selectById" resultType="com.lifeix.cbs.mall.dto.order.MallOrder">
+        SELECT
+        id, 
+		userId, 
+		goodsId, 
+		goodsPrice, 
+		goodsNum, 
+		postage, 
+		amount, 
+		orderAddress, 
+		status, 
+		goodsPro, 
+		userRemark, 
+		cancelReason, 
+		createTime,  
+		shopTime, 
+		doneTime, 
+		logId, 
+		lockId 
+        FROM 
+        <include refid="TAB_NAME"/>
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="findMallOrders" resultType="com.lifeix.cbs.mall.dto.order.MallOrder">
+        SELECT
+        id, 
+		userId, 
+		goodsId, 
+		goodsPrice, 
+		goodsNum, 
+		postage, 
+		amount, 
+		orderAddress, 
+		status, 
+		goodsPro, 
+		userRemark, 
+		cancelReason, 
+		createTime,  
+		shopTime, 
+		doneTime, 
+		logId, 
+		lockId 
+        FROM 
+        <include refid="TAB_NAME"/>
+		<where>     
+	       <if test="userId != null">
+	            userId = #{userId}
+	        </if>    
+	        <if test="status != null">     
+	            AND status IN
+				<foreach item="item" index="index" collection="status" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+	        </if>
+	        <if test="startId != null">
+	            AND id &lt; #{startId}
+	        </if>     
+	    </where>
+        ORDER BY id DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>

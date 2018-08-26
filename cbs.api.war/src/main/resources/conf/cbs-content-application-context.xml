@@ -1,0 +1,155 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<bean id="handlerExceptionResolver"
+		class="com.lifeix.biz.common.exception.SpringGlobalExceptionResolver" />
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- one of the properties available; the maximum file size in bytes -->
+		<property name="maxUploadSize" value="5000000" />
+	</bean>
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:conf/ds.conf</value>
+				<value>classpath:conf/settings.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="abstractDataSource" abstract="true"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="minPoolSize" value="${jdbc.minPoolSize}" />
+		<property name="maxPoolSize" value="${jdbc.maxPoolSize}" />
+		<property name="initialPoolSize" value="${jdbc.initialPoolSize}" />
+		<property name="maxIdleTime" value="${jdbc.maxIdleTime}" />
+		<property name="acquireIncrement" value="${jdbc.acquireIncrement}" />
+		<property name="checkoutTimeout" value="${jdbc.acquireCheckoutTimeout}" />
+	</bean>
+
+	<!-- 数据源 - content -->
+	<bean id="contentDataSource" parent="abstractDataSource"
+		lazy-init="true">
+		<property name="jdbcUrl" value="${content.jdbc.url}" />
+		<property name="user" value="${content.jdbc.username}" />
+		<property name="password" value="${content.jdbc.password}" />
+	</bean>
+
+	<!-- memcache -->
+	<bean id="abstractMemcacheService" abstract="true"
+		class="com.lifeix.framework.memcache.impl.MemcacheServiceImpl"
+		init-method="init" destroy-method="destory">
+	</bean>
+
+	<bean id="memcacheService" parent="abstractMemcacheService">
+		<property name="memcacheAddrs" value="${memcache.addrs}" />
+		<property name="memcacheEnbale" value="${memcache.enable}" />
+	</bean>
+
+
+	<!-- jedis pool配置 -->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="1024" />
+		<property name="maxIdle" value="256" />
+		<property name="maxWaitMillis" value="2000" />
+		<property name="testOnBorrow" value="true" />
+	</bean>
+
+	<!-- Redis Connection Factory -->
+	<bean id="jedisConnFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="poolConfig" ref="jedisPoolConfig"></property>
+		<property name="hostName" value="${redis.host}"></property>
+		<property name="port" value="${redis.port}"></property>
+		<property name="password" value="${redis.password}"></property>
+		<property name="timeout" value="${redis.timeout}"></property>
+		<property name="database" value="${redis.db}"></property>
+	</bean>
+
+	<!-- String Redis Template -->
+	<bean id="srt" class="org.springframework.data.redis.core.StringRedisTemplate">
+		<property name="connectionFactory" ref="jedisConnFactory"></property>
+		<property name="keySerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+		</property>
+		<property name="valueSerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+		</property>
+	</bean>
+
+	<!-- 第三方API comment api (hession) -->
+	<bean id="commentClient"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${hession.comment.server.url}" />
+		<property name="serviceInterface" value="com.l99.hessian.comment.LXCommentIF" />
+		<property name="overloadEnabled" value="true"></property>
+	</bean>
+
+	<bean id="applicationInit" class="com.lifeix.cbs.api.util.ApplicationInit"
+		init-method="init">
+		<property name="manageIPs" value="${common.manageips}" />
+		<property name="solrUri" value="${search.host}" />
+		<property name="imUri" value="${im.host}"></property>
+		<property name="eBusinessID" value="${kd.EBusinessID}"/>
+		<property name="appKey" value="${kd.AppKey}"/>
+		<property name="cbsWebUri" value="${cbs.web.uri}"/>
+	</bean>
+
+	<bean id="avatar" class="java.lang.String">
+		<constructor-arg>
+			<value>${bucket.avatar}</value>
+		</constructor-arg>
+	</bean>
+
+
+	<import resource="classpath:conf/cbs-user-spring-dao.xml" />
+	<import resource="classpath:conf/cbs-user-spring-service.xml" />
+	<import resource="classpath:conf/cbs-gold-provider.xml" />
+	<import resource="classpath:conf/cbs-contest-spring-dao.xml" />
+	<import resource="classpath:conf/cbs-contest-spring-service.xml" />
+	<import resource="classpath:conf/cbs-contest-provider.xml" />
+	<import resource="classpath:conf/cbs-user-spring-dao.xml" />
+	<import resource="classpath:conf/cbs-user-spring-service.xml" />
+	<import resource="classpath:conf/cbs-content-spring-web.xml" />
+	<import resource="classpath:conf/lifeix-cbs-api-consumer.xml" />
+	<import resource="classpath:conf/cbs-spring-redis-dubbo.xml" />
+	<import resource="classpath:conf/cbs-spring-mq-config.xml" />
+	<import resource="classpath:conf/cbs-spring-user-dubbo.xml" />
+	<import resource="classpath:conf/cbs-spring-anti-dubbo.xml" />
+	<import resource="classpath:conf/cbs-spring-image-dubbo.xml" />
+	<import resource="classpath:conf/cbs-rank-provider.xml" />
+	<import resource="classpath:conf/cbs-content-provider.xml" />
+	<import resource="classpath:conf/cbs-tiyu-api-dubbo.xml" />
+	<import resource="classpath:conf/cbs-content-gold-spring-dao.xml" />
+	<import resource="classpath:conf/cbs-content-gold-spring-service.xml" />
+	<import resource="classpath:conf/cbs-message-spring-dao.xml" />
+	<import resource="classpath:conf/cbs-message-spring-service.xml" />
+	<import resource="classpath:conf/cbs-content-spring-dao.xml" />
+	<import resource="classpath:conf/cbs-content-spring-service.xml" />
+	<import resource="classpath:conf/cbs-spring-push-dubbo.xml" />
+	<import resource="classpath:conf/cbs-achieve-dubbo.xml" />
+	<import resource="classpath:conf/cbs-message-provider.xml"/>
+    <import resource="classpath:conf/cbs-mall-spring-dao.xml" />
+    <import resource="classpath:conf/cbs-mall-spring-service.xml" />
+    <import resource="classpath:conf/cbs-activity-spring-dao.xml" />
+    <import resource="classpath:conf/cbs-activity-spring-service.xml" />
+    <import resource="classpath:conf/cbs-user-provider.xml" />
+    
+    
+    <!-- 引入kafka -->
+    <import resource="classpath:conf/kafka-producer.xml" />
+</beans>

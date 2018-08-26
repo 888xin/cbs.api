@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BootInfoMapper">
+
+	<sql id="TAB_NAME">boot_info</sql>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.content.dto.boot.BootInfo">
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(infoKey, enableFlag, type, advTime,dataLink, createTime)
+		VALUES
+		(#{infoKey},#{enableFlag},#{type},#{advTime},#{dataLink},#{createTime})
+	</insert>
+	
+	 <update id="update">
+        update
+       <include refid="TAB_NAME" />
+        <set>
+            <if test="infoKey != null">
+                infoKey=#{infoKey},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="advTime != null">
+                advTime=#{advTime},
+            </if>
+            <if test="dataLink != null">
+                dataLink=#{dataLink}
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+	<update id="deleteById">
+		DELETE FROM
+		<include refid="TAB_NAME" />
+		WHERE id = #{id}
+	</update>
+
+
+	<update id="AbleChangeById">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		enableFlag= #{enableFlag}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findBootInfos" resultType="com.lifeix.cbs.content.dto.boot.BootInfo">
+		SELECT
+		id,
+		infoKey,
+		enableFlag,
+		type,
+		advTime,
+		dataLink,
+		createTime
+		FROM
+		<include refid="TAB_NAME" />
+		<where>
+			<if test="startId != null">
+				id &lt; #{startId}
+			</if>
+		</where>
+		ORDER BY id DESC
+		LIMIT #{limit}
+	</select>
+
+	<select id="selectLast" resultType="com.lifeix.cbs.content.dto.boot.BootInfo">
+		SELECT
+		id,
+		infoKey,
+		enableFlag,
+		type,
+		advTime,
+		dataLink,
+		createTime
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE  enableFlag = 1
+		ORDER BY id DESC
+		LIMIT 1
+	</select>
+	
+	<select id="findOneById" resultType="com.lifeix.cbs.content.dto.boot.BootInfo">
+        SELECT
+        *
+        FROM
+		<include refid="TAB_NAME" />
+        WHERE
+        id = #{id}
+    </select>
+
+</mapper>

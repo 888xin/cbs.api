@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OddsWarnMapper">
+
+	<sql id="TAB_NAME">cbs_odds_warn</sql>
+
+	<sql id="SELECT_COLUMN">id, contestId, playType, oddsId, handicap, homeRoi, drawRoi, awayRoi, initHandicap, initHomeRoi, initDrawRoi, initAwayRoi, company, status, createTime</sql>
+
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.odds.OddsWarn">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		id = #{id}
+		LIMIT 1
+	</select>
+	
+	<select id="selectByOddsId" resultType="com.lifeix.cbs.contest.dto.odds.OddsWarn">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE 
+		playType = #{playType} 
+		AND oddsId = #{oddsId} 
+		AND status = 0  
+		LIMIT 1
+	</select>
+	
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.odds.OddsWarn" >
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(contestId, playType, oddsId, handicap, homeRoi, drawRoi, awayRoi, initHandicap, initHomeRoi, initDrawRoi, initAwayRoi, company, status, createTime)
+		VALUES
+		(#{contestId}, #{playType}, #{oddsId}, #{handicap}, #{homeRoi}, #{drawRoi}, #{awayRoi}, #{initHandicap}, #{initHomeRoi}, #{initDrawRoi}, #{initAwayRoi}, #{company}, #{status}, #{createTime})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.odds.OddsWarn">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		handicap=#{handicap}, homeRoi=#{homeRoi}, drawRoi=#{drawRoi}, awayRoi=#{awayRoi}, company=#{company}, status=#{status} 
+		WHERE
+		id = #{id}
+	</update>
+
+	<select id="selectByStatus" resultType="com.lifeix.cbs.contest.dto.odds.OddsWarn">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM
+		<include refid="TAB_NAME" />
+		<where>
+			<if test="status != null">
+				AND status = #{status}
+			</if>
+			<if test="startId != null">
+				AND id &lt; #{startId} 
+			</if>
+		</where>
+		ORDER BY id DESC 
+		LIMIT #{limit}
+	</select>
+
+</mapper>

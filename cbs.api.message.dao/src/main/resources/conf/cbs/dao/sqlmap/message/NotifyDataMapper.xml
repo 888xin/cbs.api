@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NotifyDataMapper">
+
+	<sql id="table_name">cbs_notify_data</sql>
+
+	<sql id="selectId">
+		userId, targetId, type, templetId, template, templateData,
+		createTime, readFlag, skipId
+	</sql>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.message.dto.notify.NotifyData"
+		useGeneratedKeys="true" keyProperty="notifyId">
+		INSERT INTO
+		<include refid="table_name" />
+		(
+		<include refid="selectId" />
+		)
+		values
+		(#{userId},#{targetId},#{type},#{templetId},#{template},#{templateData},
+		#{createTime},#{readFlag},#{skipId})
+	</insert>
+
+
+	<select id="getUnreadNotifyCount" resultType="int">
+		SELECT
+		COUNT(1)
+		FROM
+		<include refid="table_name" />
+		WHERE
+		userId = #{userId}
+
+		<if test="type !=  null">
+			and type in
+			<foreach item="item" index="index" collection="type" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		and readFlag=FALSE
+	</select>
+
+
+	<select id="findUserNotifys" resultType="com.lifeix.cbs.message.dto.notify.NotifyData">
+		SELECT
+		<include refid="selectId" />
+		FROM
+		<include refid="table_name" />
+		WHERE
+		userId = #{userId}
+		<if test="type !=  null">
+			and type in
+			<foreach item="item" index="index" collection="type" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+
+		order by notifyId desc
+		limit #{startId}, #{limit}
+	</select>
+
+
+	<update id="updateUnreadNotify" parameterType="map">
+		update
+		<include refid="table_name" />
+		SET readFlag=TRUE
+		WHERE
+		userId = #{userId}
+		<if test="type !=  null">
+			and type in
+			<foreach item="item" index="index" collection="type" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		AND readFlag=FALSE
+	</update>
+
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FbContestRecordMapper">
+
+	<sql id="TAB_NAME">cbs_fb_contest_record</sql>
+	
+	<sql id="SELECT_COLUMN">targetId,startTime,homeTeam,awayTeam,homeScores,awayScores,cupId,cupName,winType,jcWinType</sql>
+
+	<select id="selectHeadToHeadRecord" resultType="com.lifeix.cbs.contest.dto.fb.FbContestRecord">
+		SELECT 
+		<include refid="SELECT_COLUMN" />  
+		FROM  
+		<include refid="TAB_NAME" />
+		WHERE 
+		(homeTeam = #{homeTeam} AND awayTeam = #{awayTeam}) OR (homeTeam = #{awayTeam} AND awayTeam = #{homeTeam}) 
+		ORDER BY startTime DESC 
+		LIMIT #{num}  
+	</select>
+	
+	<select id="selectTeamRecord" resultType="com.lifeix.cbs.contest.dto.fb.FbContestRecord">
+		SELECT 
+		<include refid="SELECT_COLUMN" /> 
+		FROM  
+		<include refid="TAB_NAME" />
+		WHERE 
+		(homeTeam = #{teamId} OR awayTeam = #{teamId}) 
+		AND winType > 0 AND jcWinType > 0 
+		ORDER BY startTime DESC 
+		LIMIT #{num}  
+	</select>
+	
+	<update id="saveContestRecord" parameterType="java.util.List">
+		INSERT IGNORE INTO 
+		<include refid="TAB_NAME" />
+		    (targetId,startTime,homeTeam,awayTeam,homeScores,awayScores,cupId,cupName,createTime)  
+	    VALUES  
+	    <foreach collection="list" index="index" item="item" separator=",">  
+	        (#{item.targetId},#{item.startTime},#{item.homeTeam},#{item.awayTeam},
+	        #{item.homeScores},#{item.awayScores},#{item.cupId},#{item.cupName},NOW())  
+	    </foreach>  
+	</update>
+	
+	<select id="selectAnalysisNeeded" resultType="com.lifeix.cbs.contest.dto.fb.FbContestRecord">
+		SELECT 
+		<include refid="SELECT_COLUMN" />  
+		FROM  
+		<include refid="TAB_NAME" />
+		WHERE 
+		(winType = 0 OR jcWinType = 0) 
+		<if test="maxId != null">
+			AND targetId > #{maxId} 
+		</if>
+		ORDER BY targetId ASC  
+		LIMIT #{num}  
+	</select>
+	
+	<update id="updateWinTypes" parameterType="list">
+		UPDATE <include refid="TAB_NAME" /> 
+		<trim prefix=" SET " suffixOverrides=",">
+			<trim prefix=" winType = CASE " suffix=" END, ">
+				<foreach collection="list" item="item" index="index">
+					WHEN targetId=#{item.targetId} THEN #{item.winType}
+				</foreach>
+			</trim>
+			<trim prefix=" jcWinType = CASE " suffix=" END, ">
+				<foreach collection="list" item="item" index="index">
+					WHEN targetId=#{item.targetId} THEN #{item.jcWinType}
+				</foreach>
+			</trim>
+		</trim>
+		WHERE targetId IN 
+		<foreach collection="list" separator="," item="item" index="index"
+			open="(" close=")">
+			#{item.targetId} 
+		</foreach>
+	</update>
+
+</mapper>

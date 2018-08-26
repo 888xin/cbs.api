@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="YyContestMapper">
+
+	<sql id="TAB_NAME">cbs_yy_contest</sql>
+	
+	<sql id="SELECT_COLUMN">
+	id, title, images, text, options, cupId, cupName, createTime, startTime, endTime, status, winner, settle, isLongbi, hideFlag,initCount, showType, activityFlag, listImage
+	</sql>
+	
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.yy.YyContest">
+		SELECT 
+		<include refid="SELECT_COLUMN" /> 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		id = #{id}
+		LIMIT 1
+	</select>
+
+	<select id="selectByIds" resultType="com.lifeix.cbs.contest.dto.yy.YyContest">
+		SELECT 
+		<include refid="SELECT_COLUMN" /> 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		id IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.yy.YyContest">
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(title, images, text, options, cupId, cupName, createTime, startTime, endTime, status, winner, settle, isLongbi, initCount, showType, activityFlag, listImage)
+		VALUES
+		(#{title},#{images},#{text},#{options},#{cupId},#{cupName},#{createTime},#{startTime},#{endTime},#{status},#{winner},#{settle},#{isLongbi},#{initCount},#{showType},#{activityFlag},#{listImage})
+	</insert>
+	
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.yy.YyContest">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		title=#{title}, images=#{images}, text=#{text}, options=#{options}, cupId=#{cupId}, cupName=#{cupName}, startTime=#{startTime}, endTime=#{endTime}, status=#{status}, winner=#{winner}, settle=#{settle}, isLongbi=#{isLongbi}, initCount=#{initCount}, showType=#{showType}, activityFlag=#{activityFlag}, listImage=#{listImage}
+		WHERE 
+		id = #{id}
+	</update>
+
+	<update id="updateHide">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET 
+		hideFlag=#{hideFlag} 
+		WHERE 
+		id = #{id}
+	</update>
+
+	<select id="findBetYyContests" resultType="com.lifeix.cbs.contest.dto.yy.YyContest">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE 
+		startTime &lt; NOW() 
+		AND 
+		endTime &gt; NOW() 
+		AND 
+		hideFlag = FALSE 
+		<if test="cupId != null">
+			AND cupId = #{cupId} 
+		</if>
+		<if test="startId != null">
+			AND id &lt; #{startId} 
+		</if>
+		ORDER BY id DESC   
+		LIMIT #{limit}
+	</select>
+	
+    <select id="findBetYyCups" resultType="com.lifeix.cbs.contest.dto.yy.YyContest">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		startTime &lt; NOW() 
+		AND 
+		endTime &gt; NOW() 
+		AND 
+		hideFlag = FALSE 
+		GROUP BY cupId
+	</select>
+	
+	<select id="findYyContests" resultType="com.lifeix.cbs.contest.dto.yy.YyContest">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE 
+		hideFlag = #{hideFlag}    
+		<if test="type != null and  type == true">
+			AND endTime &lt; NOW() 
+		</if>
+		<if test="type != null and  type == false">
+			AND endTime &gt; NOW() 
+		</if>
+		<if test="cupId != null">
+			AND cupId = #{cupId} 
+		</if>
+		<if test="startId != null">
+			AND id &lt; #{startId} 
+		</if>
+		ORDER BY id DESC   
+		LIMIT #{limit}
+	</select>
+	
+	<select id="findTimeoutContest" resultType="com.lifeix.cbs.contest.dto.yy.YyContest">
+		SELECT 
+		<include refid="SELECT_COLUMN" /> 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE 
+		settle = FALSE   
+		AND 
+		winner &gt; 0  
+		AND 
+		id &gt; #{contestId} 
+		AND 
+		endTime &lt; NOW()
+		LIMIT #{limit}
+	</select>
+
+    <select id="settleNum" resultType="int">
+        SELECT
+        count(*)
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        status = 0
+        AND
+        hideFlag = false
+        AND
+        NOW() > endTime
+    </select>
+	
+</mapper>

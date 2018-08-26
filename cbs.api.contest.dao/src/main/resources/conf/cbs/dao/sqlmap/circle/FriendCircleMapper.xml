@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FriendCircleMapper">
+
+	<sql id="TAB_NAME">cbs_friend_circle</sql>
+	
+	<sql id="SELECT_COLUMN">id,userId,sourceId,sourceUserId,type,content,params,contestType,contestId,client,deleteFlag,createTime,hasContent,coupon,settle</sql>
+	
+	<select id="getFriendCircleByIds" resultType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		id in
+		<foreach item="item" index="index" collection="circleIds"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		<if test="client != null and client !=''">
+			and client = #{client}
+		</if>
+		AND contestType != 10
+		ORDER BY id DESC
+	</select>
+
+	<select id="getMyCircleByIds" resultType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		userId = #{userId}
+		<if test="client != null and client !=''">
+			AND client = #{client}
+		</if>
+		<if test="hasContent != null">
+			AND hasContent = #{hasContent}
+		</if>
+		<if test="type != null">
+			AND type = #{type}
+		</if>
+		AND contestType != 10
+		AND deleteFlag = 0
+		ORDER BY id DESC
+		LIMIT #{startId},#{limit}
+	</select>
+	
+	<select id="getMyYayaCircle" resultType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		userId = #{userId}
+		<if test="startId != null">
+			AND id &lt; #{startId} 
+		</if>
+		AND contestType = 10
+		AND deleteFlag = 0
+		ORDER BY id DESC
+		LIMIT #{limit}
+	</select>
+
+	<select id="getInnerCirclesNum" resultType="int">
+		SELECT
+		count(1)
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+        1=1
+		<if test="userId != null and userId !=''">
+			and userId = #{userId}
+		</if>
+
+		<if test="content != null and content != '' and userId != null">
+			or content like CONCAT('%','${content}','%' ) 
+		</if>
+		
+		<if test="content != null and content != ''  and userId == null">
+			and content like CONCAT('%','${content}','%' ) 
+		</if>
+	</select>
+	
+
+	<select id="getInnerCircles" resultType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+        1=1
+		<if test="userId != null and userId !=''">
+			and userId = #{userId}
+		</if>
+
+		<if test="content != null  and content != '' and userId != null">
+			or content like CONCAT('%','${content}','%' ) 
+		</if>
+		
+		<if test="content != null and content != ''  and userId == null">
+			and content like CONCAT('%','${content}','%' ) 
+		</if>
+
+		<if test="startId != null">
+			AND id &gt; #{startId}
+		</if>
+		<if test="endId != null">
+			AND id &lt; #{endId}
+		</if>
+
+		<if test="startId != null">
+			ORDER BY id
+		</if>
+		<if test="endId != null">
+			ORDER BY id DESC
+		</if>
+		
+		<if test="startId == null and endId == null">
+			ORDER BY id desc
+		</if>
+
+        <if test="skip == null">
+            LIMIT #{limit}
+        </if>
+        <if test="skip != null">
+            LIMIT #{skip},#{limit}
+        </if>
+
+	</select>
+
+	<select id="findById" resultType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		id = #{id}
+		limit 1
+	</select>
+
+	<update id="deleteById">
+		update 
+		<include refid="TAB_NAME" />
+		set deleteFlag = 1
+		WHERE
+		id =
+		#{id}
+	</update>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.circle.FriendCircle"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(userId, sourceId, sourceUserId, type, content, params, contestType,contestId,
+		client, deleteFlag, createTime, hasContent, coupon)
+		VALUES
+		(#{userId},#{sourceId},#{sourceUserId},#{type},#{content},#{params},#{contestType},#{contestId},
+		#{client},#{deleteFlag},now(),#{hasContent},#{coupon})
+	</insert>
+
+	<update id="updateContent" parameterType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+		UPDATE
+		<include refid="TAB_NAME" />
+        <set>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="params != null">
+                params=#{params},
+            </if>
+            <if test="sourceId != null">
+                sourceId=#{sourceId},
+            </if>
+            <if test="hasContent != null">
+                hasContent=#{hasContent},
+            </if>
+            <if test="settle != null">
+                settle=#{settle},
+            </if>
+        </set>
+		WHERE
+		id= #{id}
+	</update>
+
+    <select id="findByContestId" resultType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		contestType = #{contestType} AND contestId = #{contestId}
+	</select>
+
+
+    <select id="findNotSettles" resultType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		TYPE=1 
+		AND settle=FALSE 
+		AND createTime &lt; #{createTime}
+		AND contestType IN (0,1) 
+        <if test="startId != null">
+            AND id &gt; #{startId}
+        </if>
+        ORDER BY id
+        LIMIT #{limit}
+	</select>
+
+
+    <select id="getInnerReasonNum" resultType="int">
+        SELECT
+        count(1)
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        hasContent = true AND type = #{type}
+    </select>
+
+
+    <select id="getInnerReasonList" resultType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+        SELECT
+        <include refid="SELECT_COLUMN" />
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        hasContent = true AND type = #{type}
+        <if test="startId != null">
+            AND id &gt; #{startId}
+        </if>
+        <if test="endId != null">
+            AND id &lt; #{endId}
+        </if>
+
+        <if test="startId != null">
+            ORDER BY id
+        </if>
+        <if test="endId != null">
+            ORDER BY id DESC
+        </if>
+        <if test="startId == null and endId == null">
+            ORDER BY id DESC
+        </if>
+        <if test="skip == null">
+            LIMIT #{limit}
+        </if>
+        <if test="skip != null">
+            LIMIT #{skip},#{limit}
+        </if>
+    </select>
+
+
+    <select id="getReasonList" resultType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+        SELECT
+        <include refid="SELECT_COLUMN" />
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        hasContent = true AND type = 1 AND contestId = #{contestId} AND contestType = #{contestType}
+        AND deleteFlag = 0 AND LENGTH(content) > 14
+        <if test="startId != null">
+            AND id &lt; #{startId}
+        </if>
+        ORDER BY id DESC LIMIT #{limit}
+    </select>
+
+    <select id="isHasReason" resultType="boolean">
+        SELECT
+        1
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        hasContent = true AND type = 1 AND contestId = #{contestId} AND contestType = #{contestType} AND deleteFlag = 0 AND LENGTH(content) > 14
+        LIMIT 1
+    </select>
+    
+    <select id="findInnerNotSettles" resultType="com.lifeix.cbs.contest.dto.circle.FriendCircle">
+		SELECT
+		<include refid="SELECT_COLUMN" /> 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		settle=FALSE
+		AND deleteFlag=FALSE 
+		AND contestType IN (0,1) 
+        <if test="startId != null">
+            AND id &lt; #{startId}
+        </if>
+        ORDER BY id DESC
+        LIMIT #{limit}
+	</select>
+
+    <select id="getReasonUser" resultType="long">
+        SELECT
+		userId
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        hasContent = true AND type = 1 AND contestId = #{contestId} AND contestType = #{contestType} AND deleteFlag = 0 AND LENGTH(content) > 14
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ScoreModuleMapper">
+	
+	<sql id="TAB_NAME">cbs_score_module</sql>
+	
+	<select id="selectByContestType" resultType="com.lifeix.cbs.contest.dto.contest.ScoreModule">
+		SELECT 
+		id,
+		contestType,
+		moduleValue 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		contestType = #{contestType}
+		LIMIT 1 
+	</select>
+	
+	<update id="updateModuleValue" parameterType="com.lifeix.cbs.contest.dto.contest.ScoreModule">
+		UPDATE <include refid="TAB_NAME" />
+		SET moduleValue = #{moduleValue} 
+		WHERE id = #{id} 
+	</update>
+	
+</mapper>

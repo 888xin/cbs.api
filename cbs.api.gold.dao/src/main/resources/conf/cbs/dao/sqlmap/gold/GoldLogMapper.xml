@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GoldLogMapper">
+	<select id="findById" resultType="com.lifeix.cbs.api.dto.gold.GoldLog">
+		SELECT
+		logId, 
+		userId, 
+		money, 
+		content, 
+		type, 
+		ipaddress,
+		link,
+		logTime 
+		FROM cbs_gold_log  
+		WHERE 
+		logId = #{id}
+		LIMIT 1
+	</select>
+	
+	<insert id="insertAndGetPrimaryKey" parameterType="com.lifeix.cbs.api.dto.gold.GoldLog" useGeneratedKeys="true" keyProperty="logId" >
+		INSERT INTO 
+		cbs_gold_log (userId, money, content, type, ipaddress,link,logTime) 
+		VALUES (#{userId},#{money},#{content},#{type},#{ipaddress},#{link},#{logTime})
+	</insert>
+	
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.gold.GoldLog">
+		UPDATE  
+		cbs_gold_log 
+		SET 
+		userId=#{userId},money=#{money}, content=#{content}, type=#{type},ipaddress=#{ipaddress} ,link=#{link},logTime=#{logTime}
+		WHERE logId = #{logId}
+	</update>
+	
+	<delete id="delete" parameterType="com.lifeix.cbs.api.dto.gold.GoldLog">
+		delete from cbs_gold_log where logId = #{logId}
+	</delete>
+	
+	<select id="findGoldLogs" resultType="com.lifeix.cbs.api.dto.gold.GoldLog">
+		SELECT
+		logId, 
+		userId, 
+		money, 
+		content, 
+		type, 
+		ipaddress,
+		link,
+		logTime 
+		FROM cbs_gold_log  
+		WHERE userId = #{userId} 
+		<if test="startId!=null">
+			and logId &lt; #{startId}
+		</if>
+		ORDER BY logId DESC 
+		limit 
+		#{limit}
+	</select>
+	
+	<select id="findSystemGoldLogs" resultType="com.lifeix.cbs.api.dto.gold.GoldLog">
+		SELECT
+		logId, 
+		userId, 
+		money, 
+		content, 
+		type, 
+		ipaddress,
+		link,
+		logTime 
+		FROM cbs_gold_log  
+		WHERE type = 5 
+		<if test="userId!=null">
+			and userId = #{userId} 
+		</if>
+		<if test="roleId!=null">
+			and link = #{roleId} 
+		</if>
+		<if test="startId!=null">
+			and logId &lt; #{startId}
+		</if>
+		<if test="beginTime!=null">
+			and logTime &gt; #{beginTime}
+		</if>
+		<if test="endTime!=null">
+			and logTime &lt; #{endTime}
+		</if> 
+		ORDER BY logId DESC 
+		limit 
+		#{limit}
+	</select>
+	
+	<select id="findByType" resultType="com.lifeix.cbs.api.dto.gold.GoldLog">
+		SELECT
+		logId, 
+		userId, 
+		money, 
+		content, 
+		type, 
+		ipaddress,
+		link,
+		logTime 
+		FROM cbs_gold_log  
+		WHERE 
+		logId = #{id}
+		LIMIT 1
+	</select>
+	
+	<select id="countGold" resultType="com.lifeix.cbs.api.dto.gold.GoldLog">
+		SELECT
+		logId, 
+		userId, 
+		money, 
+		content, 
+		type, 
+		ipaddress,
+		link,
+		logTime 
+		FROM cbs_gold_log
+		WHERE logTime between #{createTime} AND #{endTime}
+	</select>
+	
+	<select id="findSystemIncomeLog" resultType="com.lifeix.cbs.api.dto.gold.GoldLog">
+		SELECT
+		logId, 
+		userId, 
+		money, 
+		content, 
+		type, 
+		ipaddress,
+		link,
+		logTime 
+		FROM cbs_gold_log  
+		WHERE money &lt; 0
+		<if test="startId!=null">
+			and logId &lt; #{startId}
+		</if>
+		and logTime between #{start} and #{end}
+		ORDER BY logId DESC 
+		<if test="limit!=null">
+			limit  #{limit}
+		</if>
+		
+	</select>
+	
+	<select id="findSystemOutlayLog" resultType="com.lifeix.cbs.api.dto.gold.GoldLog">
+		SELECT
+		logId, 
+		userId, 
+		money, 
+		content, 
+		type, 
+		ipaddress,
+		link,
+		logTime 
+		FROM cbs_gold_log  
+		WHERE money &gt; 0
+		<if test="startId!=null">
+			and logId &lt; #{startId}
+		</if>
+		and logTime between #{start} and #{end}
+		ORDER BY logId DESC 
+		<if test="limit!=null">
+			limit  #{limit}
+		</if>
+	</select>  
+	
+	<select id="findSystemLogDetail" resultType="com.lifeix.cbs.api.dto.gold.GoldLog">
+		SELECT
+		logId, 
+		userId, 
+		money, 
+		content, 
+		type, 
+		ipaddress,
+		link,
+		logTime 
+		FROM cbs_gold_log  
+		WHERE 1=1
+		<if test="start!=null">
+		and logTime between #{start} and #{end} 
+		</if>
+		 
+		<if test="typeArray!=null">
+			<foreach collection="typeArray" item="item" open="AND (" close=")" separator="OR">
+				type=#{item}
+			</foreach>
+		</if>
+		<if test="startId!=null">
+			and logId &lt; #{startId}
+		</if>
+		<if test="logId!=null">
+			and logId= #{logId}
+		</if>
+		<if test="userId!=null">
+			and userId = #{userId}
+		</if>
+		ORDER BY logId DESC 
+		<if test="limit!=null">
+			limit  #{limit}
+		</if>
+	</select> 
+	
+	
+</mapper>

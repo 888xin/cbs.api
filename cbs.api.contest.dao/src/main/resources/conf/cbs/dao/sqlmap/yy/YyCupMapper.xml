@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="YyCupMapper">
+
+	<sql id="TAB_NAME">cbs_yy_cup</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.yy.YyCup">
+		SELECT 
+		cupId, 
+		cupName, 
+		count, 
+		createTime 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		cupId = #{cupId}
+		LIMIT 1
+	</select>
+
+    <select id="selectByName" resultType="com.lifeix.cbs.contest.dto.yy.YyCup">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        cupName = #{cupName}
+    </select>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.yy.YyCup">
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(cupName, createTime)
+		VALUES
+		(#{cupName},#{createTime})
+	</insert>
+	
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.yy.YyCup">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		cupName=#{cupName}, count=#{count}   
+		WHERE 
+		cupId = #{cupId}
+	</update>
+
+	<select id="findYyCups" resultType="com.lifeix.cbs.contest.dto.yy.YyCup">
+		SELECT 
+		cupId, 
+		cupName, 
+		count, 
+		createTime 
+		FROM
+		<include refid="TAB_NAME" />
+	</select>
+	
+</mapper>

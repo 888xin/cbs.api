@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContestChannelMapper">
+	
+	<sql id="TAB_NAME">cbs_contest_channel</sql>
+	
+	<select id="selectAll" resultType="com.lifeix.cbs.contest.dto.channel.ContestChannel">
+		SELECT
+		id,
+		name,
+		data,
+		sort,
+		createTime,
+		contestType
+		FROM 
+		<include refid="TAB_NAME" />
+		ORDER BY sort DESC
+		LIMIT 1000
+	</select>
+	
+	
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.channel.ContestChannel">
+		SELECT
+		id,
+		name,
+		data,
+		sort,
+		createTime,
+		contestType
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE id = #{id}
+	</select>
+	
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.channel.ContestChannel" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		<include refid="TAB_NAME" /> ( name,data, sort,createTime,contestType)
+		VALUES (#{name},#{data},#{sort},#{createTime},#{contestType})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.channel.ContestChannel">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		name=#{name}, data=#{data}, sort=#{sort}, contestType=#{contestType}
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteById">
+		DELETE FROM <include refid="TAB_NAME" />
+		WHERE id = #{id}
+	</update>
+
+	
+
+</mapper>

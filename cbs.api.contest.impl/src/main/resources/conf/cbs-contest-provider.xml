@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+    
+    <!-- 足球赛事服务 给tiyu-api的赛事单篇在上面-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.FbContestDubbo" ref="fbContestDubbo" ></dubbo:service>
+    <bean id="fbContestDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.FbContestDubboImpl" />
+    
+    <!-- 篮球赛事服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.BbContestDubbo" ref="bbContestDubbo" ></dubbo:service>
+    <bean id="bbContestDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.BbContestDubboImpl" />
+    
+    <!-- 足球赛事扩展信息服务(spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.FbContestExtDubbo" ref="fbContestExtDubbo" ></dubbo:service>
+    <bean id="fbContestExtDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.FbContestExtDubboImpl" />
+    
+    <!-- 篮球赛事扩展信息服务(spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.BbContestExtDubbo" ref="bbContestExtDubbo" ></dubbo:service>
+    <bean id="bbContestExtDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.BbContestExtDubboImpl" />
+    
+    <!-- 足球赛事交手记录(spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.FbContestRecordDubbo" ref="fbContestRecordDubbo" ></dubbo:service>
+    <bean id="fbContestRecordDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.FbContestRecordDubboImpl" />
+    
+    <!-- 篮球赛事交手记录(spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.BbContestRecordDubbo" ref="bbContestRecordDubbo" ></dubbo:service>
+    <bean id="bbContestRecordDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.BbContestRecordDubboImpl" />
+    
+    <!-- 足球文字直播服务(spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.live.FbLiveWordsDubbo" ref="fbLiveWordsDubbo" ></dubbo:service>
+    <bean id="fbLiveWordsDubbo" class="com.lifeix.cbs.contest.impl.spark.live.FbLiveWordsDubboImpl" />
+    
+    <!-- 篮球文字直播服务(spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.live.BbLiveWordsDubbo" ref="bbLiveWordsDubbo" ></dubbo:service>
+    <bean id="bbLiveWordsDubbo" class="com.lifeix.cbs.contest.impl.spark.live.BbLiveWordsDubboImpl" />
+    
+    <!-- 足球技术统计服务(spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.live.FbStatisticsDubbo" ref="fbStatisticsDubbo" ></dubbo:service>
+    <bean id="fbStatisticsDubbo" class="com.lifeix.cbs.contest.impl.spark.live.FbStatisticsDubboImpl" />
+    
+    <!-- 篮球球队技术统计服务(spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.live.BbTeamStatisticsDubbo" ref="bbTeamStatisticsDubbo" ></dubbo:service>
+    <bean id="bbTeamStatisticsDubbo" class="com.lifeix.cbs.contest.impl.spark.live.BbTeamStatisticsDubboImpl" />
+    
+    <!-- 篮球球员技术统计服务(spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.live.BbPlayerStatisticsDubbo" ref="bbPlayerStatisticsDubbo" ></dubbo:service>
+    <bean id="bbPlayerStatisticsDubbo" class="com.lifeix.cbs.contest.impl.spark.live.BbPlayerStatisticsDubboImpl" />
+    
+    <!-- 篮球球员服务(spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.BbPlayerDubbo" ref="bbPlayerDubbo" ></dubbo:service>
+    <bean id="bbPlayerDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.BbPlayerDubboImpl" />
+    
+    <!-- 足球赔率服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.odds.FbOddsDubbo" ref="fbOddsDubbo" ></dubbo:service>
+    <bean id="fbOddsDubbo" class="com.lifeix.cbs.contest.impl.spark.odds.FbOddsDubboImpl" />
+    
+    <!-- 篮球赔率服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.odds.BbOddsDubbo" ref="bbOddsDubbo" ></dubbo:service>
+    <bean id="bbOddsDubbo" class="com.lifeix.cbs.contest.impl.spark.odds.BbOddsDubboImpl" />
+    
+    <!-- 足球赔率历史服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.odds.FbOddsHistDubbo" ref="fbOddsHistDubbo" ></dubbo:service>
+    <bean id="fbOddsHistDubbo" class="com.lifeix.cbs.contest.impl.spark.odds.FbOddsHistDubboImpl" />
+    
+    <!-- 篮球赔率历史服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.odds.BbOddsHistDubbo" ref="bbOddsHistDubbo" ></dubbo:service>
+    <bean id="bbOddsHistDubbo" class="com.lifeix.cbs.contest.impl.spark.odds.BbOddsHistDubboImpl" />
+        
+    <!-- 足球球队服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.team.FbTeamDubbo" ref="fbTeamDubbo" ></dubbo:service>
+    <bean id="fbTeamDubbo" class="com.lifeix.cbs.contest.impl.spark.team.FbTeamDubboImpl" />
+    
+    <!-- 篮球球队服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.team.BbTeamDubbo" ref="bbTeamDubbo" ></dubbo:service>
+    <bean id="bbTeamDubbo" class="com.lifeix.cbs.contest.impl.spark.team.BbTeamDubboImpl" />
+    
+    <!-- 足球联赛服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.cup.FbCupDubbo" ref="fbCupDubbo" ></dubbo:service>
+    <bean id="fbCupDubbo" class="com.lifeix.cbs.contest.impl.spark.cup.FbCupDubboImpl" />
+    
+    <!-- 篮球联赛服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.cup.BbCupDubbo" ref="bbCupDubbo" ></dubbo:service>
+    <bean id="bbCupDubbo" class="com.lifeix.cbs.contest.impl.spark.cup.BbCupDubboImpl" />
+    
+    <!-- 下单机器人服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.robot.BetRobotDubbo" ref="betRobotDubbo" ></dubbo:service>
+    <bean id="betRobotDubbo" class="com.lifeix.cbs.contest.impl.spark.robot.BetRobotDubboImpl" />
+    
+    <!-- 足球结算服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.settle.FbSettleDubbo" ref="fbSettleDubbo" ></dubbo:service>
+    <bean id="fbSettleDubbo" class="com.lifeix.cbs.contest.impl.spark.settle.FbSettleDubboImpl" />
+    
+    <!-- 篮球结算服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.settle.BbSettleDubbo" ref="bbSettleDubbo" ></dubbo:service>
+    <bean id="bbSettleDubbo" class="com.lifeix.cbs.contest.impl.spark.settle.BbSettleDubboImpl" />
+    
+    <!-- 结算任务服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.settle.SettleTaskDubbo" ref="settleTaskDubbo" ></dubbo:service>
+    <bean id="settleTaskDubbo" class="com.lifeix.cbs.contest.impl.spark.settle.SettleTaskDubboImpl" />
+
+    <!-- 下单统计任务服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.statistic.BetStatisticDubbo" ref="betStatisticDubbo" ></dubbo:service>
+    <bean id="betStatisticDubbo" class="com.lifeix.cbs.contest.impl.spark.statistic.BetStatisticDubboImpl" />
+
+	<!-- 押押赛事服务 -->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.YyContestDubbo" ref="yyContestDubbo" ></dubbo:service>
+    <bean id="yyContestDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.YyContestDubboImpl" />
+        
+    <!-- 押押结算服务-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.settle.YySettleDubbo" ref="yySettleDubbo" ></dubbo:service>
+    <bean id="yySettleDubbo" class="com.lifeix.cbs.contest.impl.spark.settle.YySettleDubboImpl" />
+    
+    <!-- 赛事分类服务 -->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.channel.ContestChannelDubbo" ref="contestChannelDubbo" ></dubbo:service>
+    <bean id="contestChannelDubbo" class="com.lifeix.cbs.contest.impl.spark.channel.ContestChannelDubboImpl" />
+	
+	<!-- 赛事比分模式服务 -->
+	<dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.ScoreModuleDubbo" ref="scoreModuleDubbo" ></dubbo:service>
+    <bean id="scoreModuleDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.ScoreModuleDubboImpl" />
+    
+    <!-- 赛事下单服务 -->
+	<dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.ContestBetDubbo" ref="contestBetDubbo" ></dubbo:service>
+    <bean id="contestBetDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.ContestBetDubboImpl" />
+
+    <!-- 赛事串更改状态 (spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.spark.contest.BunchContestDubbo" ref="bunchContestDubbo" ></dubbo:service>
+    <bean id="bunchContestDubbo" class="com.lifeix.cbs.contest.impl.spark.contest.BunchContestDubboImpl" />
+
+    <!-- 查找同一天球队出现两次以上的记录 (spark调用)-->
+    <!--<dubbo:service interface="com.lifeix.cbs.contest.service.spark.statistic.SameStatisticDubbo" ref="sameStatisticDubbo" ></dubbo:service>-->
+    <!--<bean id="sameStatisticDubbo" class="com.lifeix.cbs.contest.impl.spark.statistic.SameStatisticDubboImpl" />-->
+
+    <!-- 超额下注和查找同一天球队出现两次以上的记录 (spark调用)-->
+    <dubbo:service interface="com.lifeix.cbs.contest.service.contest.ContestStatisticsService" ref="contestStatisticsService" ></dubbo:service>
+
+</beans>

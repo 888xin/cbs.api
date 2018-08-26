@@ -1,0 +1,18 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+
+	<!-- 个人统计信息 -->
+	<dubbo:service interface="com.lifeix.cbs.api.service.spark.UserContestTaskDubbo" id="userContestTaskServiceImpl" ref="userContestTaskDubbo"  />
+
+	<!-- 系统消息推送 -->
+	<dubbo:service interface="com.lifeix.cbs.message.service.spark.PushMessageTaskDubbo" id="pushMessageTaskServiceImpl" ref="pushMessageTaskDubbo"  />
+		
+	<!-- 统计信息-->
+	<dubbo:service interface="com.lifeix.cbs.api.service.spark.UserContestStatisticsDubbo" id="UserContestStatisticsDubboImpl" ref="userContestStatisticsDubbo"  />
+		
+</beans>

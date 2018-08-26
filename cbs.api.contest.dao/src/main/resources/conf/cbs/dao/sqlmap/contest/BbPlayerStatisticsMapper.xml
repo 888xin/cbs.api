@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BbPlayerStatisticsMapper">
+
+	<sql id="TAB_NAME">cbs_bb_player_statistics</sql>
+	
+	<select id="selectByContestId" resultType="com.lifeix.cbs.contest.dto.bb.BbPlayerStatistics">
+		SELECT 
+		pId,contestId,teamId,playerId,team,playTime,points,threePointMade,threePointAtt,
+		twoPointMade,twoPointAtt,freeThrowMade,freeThrowAtt,offensiveRebounds,defensiveRebounds,
+		assists,turnovers,steals,blocks,personalFouls,techFouls 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE contestId = #{contestId} AND disabled = FALSE 
+		ORDER BY points DESC 
+	</select>
+	
+	<update id="saveStatistics" parameterType="java.util.List">
+		INSERT INTO 
+		<include refid="TAB_NAME" />
+		    (pId,contestId,teamId,playerId,team,playTime,points,threePointMade,threePointAtt,
+		    twoPointMade,twoPointAtt,freeThrowMade,freeThrowAtt,offensiveRebounds,defensiveRebounds,
+			assists,turnovers,steals,blocks,personalFouls,techFouls,disabled,createTime)  
+	    VALUES  
+	    <foreach collection="list" index="index" item="item" separator=",">  
+	        (#{item.pId},#{item.contestId},#{item.teamId},#{item.playerId},#{item.team},#{item.playTime},#{item.points},
+	        #{item.threePointMade},#{item.threePointAtt},#{item.twoPointMade},#{item.twoPointAtt},#{item.freeThrowMade},
+	        #{item.freeThrowAtt},#{item.offensiveRebounds},#{item.defensiveRebounds},#{item.assists},#{item.turnovers},
+	        #{item.steals},#{item.blocks},#{item.personalFouls},#{item.techFouls},#{item.disabled},NOW()) 
+	    </foreach> 
+	    ON DUPLICATE KEY UPDATE  
+		playTime = VALUES(playTime),
+		points = VALUES(points),
+	    threePointMade = VALUES(threePointMade), 
+		threePointAtt = VALUES(threePointAtt), 
+		twoPointMade = VALUES(twoPointMade), 
+		twoPointAtt = VALUES(twoPointAtt), 
+		freeThrowMade = VALUES(freeThrowMade), 
+		freeThrowAtt = VALUES(freeThrowAtt), 
+		offensiveRebounds = VALUES(offensiveRebounds), 
+		defensiveRebounds = VALUES(defensiveRebounds), 
+		assists = VALUES(assists), 
+		turnovers = VALUES(turnovers), 
+		steals = VALUES(steals), 
+		blocks = VALUES(blocks), 
+		personalFouls = VALUES(personalFouls), 
+		techFouls = VALUES(techFouls),
+		disabled = VALUES(disabled) 
+	</update>
+
+</mapper>

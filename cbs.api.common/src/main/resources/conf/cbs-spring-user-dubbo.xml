@@ -1,0 +1,36 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+ http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 用户通用服务 -->
+	<dubbo:reference id="accountCommonAction" interface="com.lifeix.user.api.action.account.AccountCommonAction" version="${zookeeper.user.version}">
+		<dubbo:method name="findAccountByIds" timeout="3000" />
+	</dubbo:reference>
+
+	<!-- 用户验证服务 -->
+	<dubbo:reference id="accountBasicAction" interface="com.lifeix.user.api.action.account.AccountBasicAction" version="${zookeeper.user.version}">
+	</dubbo:reference>
+
+	<!-- 用户注册服务 -->
+	<dubbo:reference id="accountV2BasicAction" interface="com.lifeix.user.api.action.account.AccountV2BasicAction" version="${zookeeper.user.version}">
+	</dubbo:reference>
+
+	<!-- 用户日志服务 -->
+	<dubbo:reference id="accountLogAction" interface="com.lifeix.user.api.action.log.AccountLogAction" version="${zookeeper.user.version}">
+	</dubbo:reference>
+	
+	<!-- 头像服务 -->
+	<dubbo:reference id="avatarAction" interface="com.lifeix.user.api.action.avatar.AvatarAction" version="${zookeeper.user.version}">
+	</dubbo:reference>
+
+	<!-- 第三方服务 -->
+	<dubbo:reference id="accountThirdAction" interface="com.lifeix.user.api.action.third.AccountThirdAction" version="${zookeeper.user.version}">
+		<dubbo:method name="loginBySdk" timeout="25000" />
+	</dubbo:reference>
+
+	<!-- 猜比赛关系 -->
+	<dubbo:reference id="cbsRelationshipService" interface="com.lifeix.nyx.relationship.service.CbsRelationshipService" version="${zookeeper.relation.version}">
+	</dubbo:reference>
+
+</beans>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FbOddsSizeMapper">
+
+	<sql id="TAB_NAME">cbs_fb_odds_size</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.odds.OddsSize">
+		SELECT 
+		oddsId, 
+		contestId, 
+		handicap, 
+		bigRoi, 
+		tinyRoi, 
+		initHandicap, 
+		initBigRoi, 
+		initTinyRoi, 
+		company, 
+		closeFlag, 
+		lockFlag,
+		belongFive  
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		oddsId = #{oddsId}
+		LIMIT 1
+	</select>
+
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.odds.OddsSize">
+		UPDATE
+		<include refid="TAB_NAME" />
+        <set>
+            <if test="contestId != null">
+                contestId=#{contestId},
+            </if>
+            <if test="bigRoi != null">
+                bigRoi=#{bigRoi},
+            </if>
+            <if test="tinyRoi != null">
+                tinyRoi=#{tinyRoi},
+            </if>
+            <if test="handicap != null">
+                handicap=#{handicap},
+            </if>
+            <if test="initBigRoi != null">
+                initBigRoi=#{initBigRoi},
+            </if>
+            <if test="initTinyRoi != null">
+                initTinyRoi=#{initTinyRoi},
+            </if>
+            <if test="initHandicap != null">
+                initHandicap=#{initHandicap},
+            </if>
+            <if test="company != null">
+                company=#{company},
+            </if>
+            <if test="closeFlag != null">
+                closeFlag=#{closeFlag},
+            </if>
+            <if test="lockFlag != null">
+                lockFlag=#{lockFlag},
+            </if>
+        </set>
+		WHERE
+		oddsId=#{oddsId}
+	</update>
+	
+	<update id="closeOdds">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		closeFlag=TRUE   
+		WHERE 
+		contestId=#{contestId}
+	</update>
+
+    <update id="openOdds">
+        UPDATE
+        <include refid="TAB_NAME" />
+        SET
+        closeFlag=FALSE
+        WHERE
+        contestId=#{contestId}
+    </update>
+	
+
+	<select id="selectByContest" resultType="com.lifeix.cbs.contest.dto.odds.OddsSize">
+		SELECT 
+		oddsId, 
+		contestId, 
+		handicap, 
+		bigRoi, 
+		tinyRoi, 
+		initHandicap, 
+		initBigRoi, 
+		initTinyRoi, 
+		company, 
+		closeFlag, 
+		lockFlag,
+		belongFive  
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		contestId = #{contestId}
+		LIMIT 1
+	</select>
+
+	<select id="selectByIds" resultType="com.lifeix.cbs.contest.dto.odds.OddsSize">
+		SELECT 
+		oddsId, 
+		contestId, 
+		handicap, 
+		bigRoi, 
+		tinyRoi, 
+		initHandicap, 
+		initBigRoi, 
+		initTinyRoi, 
+		company, 
+		closeFlag, 
+		lockFlag,
+		belongFive  
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		contestId IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="findOdds" resultType="com.lifeix.cbs.contest.dto.odds.OddsSize">
+		SELECT
+		oddsId, 
+		contestId, 
+		handicap, 
+		bigRoi, 
+		tinyRoi, 
+		initHandicap, 
+		initBigRoi, 
+		initTinyRoi, 
+		company, 
+		closeFlag, 
+		lockFlag,
+		belongFive   
+		FROM
+		<include refid="TAB_NAME" />
+        <if test="byOrder == 1">
+            <where>
+                <if test="startId != null">
+                    AND oddsId &lt; #{startId}
+                </if>
+                <if test="belongFive != null">
+                    AND belongFive = #{belongFive}
+                </if>
+            </where>
+            ORDER by oddsId DESC
+        </if>
+        <if test="byOrder == 2">
+            <where>
+                <if test="startId != null">
+                    AND contestId &lt; #{startId}
+                </if>
+                <if test="belongFive != null">
+                    AND belongFive = #{belongFive}
+                </if>
+            </where>
+            ORDER by contestId DESC
+        </if>
+        <if test="byOrder == null">
+            <where>
+                <if test="startId != null">
+                    AND contestId &lt; #{startId}
+                </if>
+                <if test="belongFive != null">
+                    AND belongFive = #{belongFive}
+                </if>
+            </where>
+            ORDER by contestId DESC
+        </if>
+		LIMIT #{limit}
+	</select>
+	
+	<update id="saveOdds" >
+		INSERT INTO 
+		<include refid="TAB_NAME" />  
+		    (contestId,handicap,bigRoi,tinyRoi,initHandicap,initBigRoi,initTinyRoi,company,belongFive)  
+	    VALUES  
+	    <foreach collection="list" index="index" item="item" separator=",">  
+	        (#{item.contestId},#{item.handicap},#{item.bigRoi},#{item.tinyRoi},#{item.initHandicap},#{item.initBigRoi},#{item.initTinyRoi},#{item.company},#{item.belongFive})  
+	    </foreach>  
+	     ON DUPLICATE KEY UPDATE 
+	     	handicap = VALUES(handicap), 
+	        bigRoi = VALUES(bigRoi),
+	        tinyRoi = VALUES(tinyRoi),
+	        company = VALUES(company) 
+	</update>
+	
+</mapper>

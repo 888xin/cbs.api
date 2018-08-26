@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ZodiacAnimalMapper">
+
+	<sql id="table_name">cbs_game_animal</sql>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.content.dto.game.ZodiacAnimal">
+		INSERT INTO
+		<include refid="table_name" />
+		(id,lottery,startTime,endTime,updateTime)
+		VALUES
+		(#{id},#{lottery},#{startTime},#{endTime},#{updateTime})
+	</insert>
+
+
+	<select id="findOne" resultType="com.lifeix.cbs.content.dto.game.ZodiacAnimal">
+		SELECT
+		*
+		FROM
+		<include refid="table_name" />
+		<where>
+			<if test="now != null">
+				AND startTime <![CDATA[<=]]>
+				#{now} AND endTime > #{now}
+			</if>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</select>
+
+	<select id="findOneByTime" resultType="com.lifeix.cbs.content.dto.game.ZodiacAnimal">
+		SELECT
+		*
+		FROM
+		<include refid="table_name" />
+		<where>
+			<if test="now != null">
+				AND startTime <![CDATA[<=]]>
+				#{now} AND endTime > #{now}
+			</if>
+		</where>
+	</select>
+
+
+
+	<select id="findNoLotteryList" resultType="com.lifeix.cbs.content.dto.game.ZodiacAnimal">
+		SELECT
+		*
+		FROM
+		<include refid="table_name" />
+		<where>
+
+			<if test="startTime != null and startTime != ''">
+				AND endTime = > #{startTime}
+			</if>
+			AND endTime<![CDATA[<=]]>
+			now()
+
+			AND status = 0
+		</where>
+	</select>
+
+	<select id="findZodiacs" resultType="com.lifeix.cbs.content.dto.game.ZodiacAnimal">
+		SELECT
+		*
+		FROM
+		<include refid="table_name" />
+		<where>
+			<if test="startId != null">
+				AND id &lt; #{startId}
+			</if>
+			<if test="status != null">
+				AND status = 1
+			</if>
+		</where>
+		ORDER BY id DESC
+		LIMIT #{limit}
+	</select>
+
+	<select id="findLast" resultType="com.lifeix.cbs.content.dto.game.ZodiacAnimal">
+		SELECT
+		*
+		FROM
+		<include refid="table_name" />
+		order by id desc
+		limit 1
+	</select>
+
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO
+		<include refid="table_name" />
+		(id,startTime,endTime,updateTime)
+		VALUES
+		<foreach collection="list" index="index" item="item"
+			separator=",">
+			(#{item.id},#{item.startTime},#{item.endTime},#{item.updateTime})
+		</foreach>
+	</insert>
+
+	<update id="update">
+		update
+		<include refid="table_name" />
+		<set>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="lottery != null and lottery != ''">
+				lottery = #{lottery},
+			</if>
+		</set>
+		WHERE
+		id = #{id}
+	</update>
+
+
+</mapper>

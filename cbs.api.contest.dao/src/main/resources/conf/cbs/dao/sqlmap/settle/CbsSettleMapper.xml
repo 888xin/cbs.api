@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CbsSettleMapper">
+
+	<sql id="TAB_NAME">cbs_settle</sql>
+	
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.settle.CbsSettle" >
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(type, contestId, closeFlag, createTime, settleTime)
+		VALUES
+		(#{type},#{contestId},#{closeFlag},#{createTime},#{settleTime})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.settle.CbsSettle" >
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		closeFlag=#{closeFlag}, createTime=#{createTime}, settleTime=#{settleTime} 
+		WHERE
+		settleId=#{settleId}
+	</update>
+	
+	
+	<update id="closeContest" >
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		closeFlag=#{closeFlag} 
+		WHERE
+		settleId=#{settleId}
+	</update>
+	
+	<select id="findSettleTask" resultType="com.lifeix.cbs.contest.dto.settle.CbsSettle">
+		SELECT
+		settleId,
+		type,
+		contestId,
+		closeFlag,
+		createTime,
+		settleTime 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		closeFlag = 0 
+		AND 
+		settleTime &lt; now() 
+		AND 
+		settleId &gt; #{settleId} 
+		ORDER BY settleId ASC
+		LIMIT #{limit}
+	</select>
+
+	<select id="findByContest" resultType="com.lifeix.cbs.contest.dto.settle.CbsSettle">
+		SELECT
+		settleId,
+		type,
+		contestId,
+		closeFlag,
+		createTime,
+		settleTime 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		type= #{type} 
+		AND 
+		contestId= #{contestId} 
+	</select>
+	
+	<select id="findCbsSettles" resultType="com.lifeix.cbs.contest.dto.settle.CbsSettle">
+		SELECT
+		settleId,
+		type,
+		contestId,
+		closeFlag,
+		createTime,
+		settleTime 
+		FROM 
+		<include refid="TAB_NAME" />
+		<where> 
+			<if test="settleId !=  null" >
+	    	 AND settleId &lt; #{settleId} 
+			</if>
+			<if test="type !=  null" >
+			 AND type= #{type} 
+			</if>
+			ORDER BY settleId DESC 
+			LIMIT #{limit}
+		</where>
+	</select>
+	
+</mapper>

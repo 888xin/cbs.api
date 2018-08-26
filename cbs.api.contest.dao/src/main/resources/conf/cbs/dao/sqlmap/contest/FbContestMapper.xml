@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FbContestMapper">
+
+	<sql id="TAB_NAME">cbs_fb_contest</sql>
+
+	<sql id="SELECT_ALL">contestId,targetId,cupId,cupName,color,homeTeam,homeScores,homeRank,
+		awayTeam,awayScores,awayRank,createTime,startTime,openTime,status,isLongbi,settle,oddsType,
+		belongFive,level,betCount,lockFlag,extFlag,roomId,finalResult,betRatio</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		contestId = #{contestId}
+		LIMIT 1
+	</select>
+
+	<select id="selectByRoomId" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		roomId = #{roomId}
+		LIMIT 1
+	</select>
+
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		targetId=#{targetId}, cupId=#{cupId}, cupName=#{cupName},
+		color=#{color}, homeTeam=#{homeTeam}, awayTeam=#{awayTeam},
+		oddsType=#{oddsType}, belongFive=#{belongFive}
+		WHERE
+		contestId=#{contestId}
+	</update>
+
+	<update id="updateChanges" parameterType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		homeScores=#{homeScores},
+		awayScores=#{awayScores},
+		status=#{status}
+		WHERE
+		contestId=#{contestId} 
+		AND (lockFlag = FALSE OR lockFlag IS NULL) 
+	</update>
+	
+	<update id="updateFinalResults" parameterType="list">
+		UPDATE <include refid="TAB_NAME" />  
+		<trim prefix="SET" suffixOverrides=",">
+			<trim prefix=" finalResult = CASE " suffix=" END, ">
+				<foreach collection="list" item="item" index="index">
+					WHEN contestId=#{item.contestId} THEN #{item.finalResult} 
+				</foreach>
+			</trim>
+		</trim>
+		WHERE contestId IN 
+		<foreach collection="list" separator="," item="item" index="index"
+			open="(" close=")">
+			#{item.contestId} 
+		</foreach>
+	</update>
+
+	<update id="updateInner" parameterType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		homeScores=#{homeScores}, awayScores=#{awayScores},
+		status=#{status}, lockFlag=#{lockFlag}, level=#{level}, cupName=#{cupName}, betRatio=#{betRatio}
+		WHERE
+		contestId=#{contestId}
+	</update>
+
+	<update id="updateSettle" parameterType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		settle=#{settle}
+		WHERE
+		contestId=#{contestId}
+	</update>
+
+	<update id="updateRoom" parameterType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		roomId=#{roomId}
+		WHERE
+		contestId=#{contestId}
+	</update>
+
+	<update id="delete">
+		DELETE FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		contestId = #{contestId}
+	</update>
+
+	<select id="selectByIds" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		contestId IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="findCupIdByRunOdds" resultType="java.lang.Long">
+		SELECT
+		cupId
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE STATUS>=0
+		GROUP BY cupId
+	</select>
+
+	<select id="findFbContestsByRangeTime" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		startTime BETWEEN #{start} AND #{end}
+		ORDER BY level
+		LIMIT #{limit}
+	</select>
+	
+	<select id="findFbContestTypeByRangeTime" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		level = 1
+		AND
+		startTime BETWEEN #{start} AND #{end}
+		GROUP BY cupId
+	</select>
+	
+
+	<select id="findFbContestsForImportant" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		level = 1
+		AND
+		startTime >= #{start}
+		AND
+		startTime &lt;#{end}
+		ORDER BY
+		startTime
+	</select>
+	
+	<select id="findTimeoutContest" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		settle &lt;&gt; oddsType
+		AND
+		contestId &gt; #{contestId}
+		AND
+		startTime &lt; #{startTime}
+		LIMIT #{limit}
+	</select>
+
+	<select id="findCancleContest" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		settle &lt;&gt; oddsType
+		AND
+		startTime &gt; #{startTime}
+		LIMIT
+		#{limit}
+	</select>
+
+	<update id="saveContest" parameterType="java.util.List">
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(contestId,targetId,cupId,cupName,color,
+		homeTeam,homeScores,homeRank,
+		awayTeam,awayScores,awayRank,
+		createTime,startTime,openTime,status,isLongbi,
+		oddsType,belongFive,level,extFlag)
+		VALUES
+		<foreach collection="list" index="index" item="item"
+			separator=",">
+			(#{item.contestId},#{item.targetId},#{item.cupId},#{item.cupName},#{item.color},
+			#{item.homeTeam},#{item.homeScores},#{item.homeRank},
+			#{item.awayTeam},#{item.awayScores},#{item.awayRank},
+			NOW(),#{item.startTime},#{item.openTime},#{item.status},#{item.isLongbi},
+			#{item.oddsType},#{item.belongFive},#{item.level},#{item.extFlag})
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		homeScores = IF(lockFlag = FALSE OR lockFlag IS NULL, VALUES(homeScores), homeScores),
+		awayScores = IF(lockFlag = FALSE OR lockFlag IS NULL, VALUES(awayScores), awayScores),
+		status = IF(lockFlag = FALSE OR lockFlag IS NULL, VALUES(status), status),
+		oddsType = VALUES(oddsType),
+		startTime = VALUES(startTime),
+		openTime = VALUES(openTime),
+		extFlag = VALUES(extFlag),
+		isLongbi = VALUES(isLongbi),
+		homeTeam = VALUES(homeTeam),
+		awayTeam = VALUES(awayTeam) 
+	</update>
+
+	<select id="findFbContestsByAbnormal" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		startTime&lt;#{startTime}
+		AND
+		status &lt;&gt; #{doneData}
+		AND
+		status
+		&lt;&gt; #{cancleData}
+		<if test="startId != null">
+			AND contestId &lt; #{startId}
+		</if>
+		ORDER by contestId DESC
+		LIMIT #{limit}
+	</select>
+
+
+	<select id="findFbContestsIngNumber" resultType="long">
+		SELECT
+		contestId
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		startTime&lt;#{startTime}
+		AND
+		status &gt;0
+		AND
+		level = 1
+	</select>
+
+
+	<select id="findNextFbContestsByCup" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		level = 1
+		AND
+		startTime &gt; #{time}
+		<if test="ids != null">
+			AND cupId IN
+			<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY startTime
+		LIMIT 1
+	</select>
+	
+	
+
+	<select id="findPrevFbContestsByCup" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		level = 1
+		AND
+		startTime &lt; #{time}
+		<if test="ids != null">
+			AND cupId IN
+			<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY startTime DESC
+		LIMIT 1
+	</select>
+
+
+    <update id="updateByRollback">
+        UPDATE
+        <include refid="TAB_NAME" />
+        SET
+        status=0 AND settle=0 AND homeScores=0 AND awayScores=0
+        WHERE
+        contestId=#{contestId}
+    </update>
+    
+    <select id="selectByTeam" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		homeTeam= #{homeTeam}
+		AND awayTeam=#{awayTeam}
+		and TO_DAYS(startTime) =TO_DAYS(#{time})
+		limit 1
+	</select>
+
+	<select id="findFbContestsByCheck" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		<include refid="SELECT_ALL" /> 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		startTime BETWEEN #{start} AND #{end}
+		AND LEVEL=1 
+		AND (oddsType &amp; 3) = 3
+		ORDER BY startTime DESC
+		LIMIT #{limit}
+	</select>
+
+
+	<select id="findFbContestsBySame" resultType="com.lifeix.cbs.contest.dto.fb.FbContest">
+		SELECT
+		contestId, startTime, homeTeam, awayTeam
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE startTime between ADDDATE(now(),INTERVAL 1 DAY) and ADDDATE(now(),INTERVAL 15 DAY)
+		AND status = 0
+		AND (level= 1 OR level=2)
+	</select>
+	
+</mapper>

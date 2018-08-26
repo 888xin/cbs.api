@@ -1,0 +1,189 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.lifeix.cbs.api</groupId>
+		<artifactId>cbs.api</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>cbs.api.war</artifactId>
+	<name>cbs-api</name>
+	<packaging>war</packaging>
+
+	<scm>
+		<connection>scm:git:ssh://git@pangtong.l99.com:19022/cbs-new/cbs-api.git</connection>
+		<url>scm:git:ssh://git@pangtong.l99.com:19022/cbs-new/cbs-api.git</url>
+	</scm>
+
+	<profiles>
+		<profile>
+			<id>development</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<properties>
+				<deployer.enviroment>development</deployer.enviroment>
+			</properties>
+			<build>
+				<finalName>${project.name}</finalName>
+
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<includes>
+							<include>*</include>
+							<include>conf/*</include>
+						</includes>
+						<filtering>true</filtering>
+					</resource>
+					<resource>
+						<directory>src/main/java</directory>
+						<excludes>
+							<exclude>**/*.java</exclude>
+						</excludes>
+						<filtering>true</filtering>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+
+		<profile>
+			<id>sandboxing</id>
+
+			<properties>
+				<deployer.enviroment>sandboxing</deployer.enviroment>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>staging</id>
+
+			<properties>
+				<deployer.enviroment>staging</deployer.enviroment>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>production</id>
+
+			<properties>
+				<deployer.enviroment>production</deployer.enviroment>
+			</properties>
+		</profile>
+	</profiles>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.lifeix.cbs.api</groupId>
+			<artifactId>cbs.api.web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.openejb</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-spring</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.xmemcached</groupId>
+			<artifactId>xmemcached</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<!-- 文件命名格式: 项目名-版本-r修订版本号 -->
+		<finalName>${project.name}-${project.version}-r${git.commit.id.abbrev}</finalName>
+
+		<!-- 打war包不要将配置文件打入进去 -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>2.1.9</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

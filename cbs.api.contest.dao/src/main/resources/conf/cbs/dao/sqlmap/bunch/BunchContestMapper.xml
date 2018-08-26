@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BunchContestMapper">
+
+	<sql id="TAB_NAME">cbs_bunch</sql>
+	
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.bunch.BunchContest">
+		SELECT 
+		*
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		id = #{id}
+	</select>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.bunch.BunchContest" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(name, image, options, cost, longbi, startTime, endTime, result)
+		VALUES
+		(#{name},#{image},#{options},#{cost},#{longbi},#{startTime},#{endTime},#{result})
+	</insert>
+	
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.bunch.BunchContest">
+		UPDATE
+        <include refid="TAB_NAME"/>
+        <set>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="image != null">
+                image=#{image},
+            </if>
+            <if test="options != null">
+                options=#{options},
+            </if>
+            <if test="cost != null">
+                cost=#{cost},
+            </if>
+            <if test="longbi != null">
+                longbi=#{longbi},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="startTime != null">
+                startTime=#{startTime},
+            </if>
+            <if test="endTime != null">
+                endTime=#{endTime},
+            </if>
+            <if test="result != null">
+                result=#{result},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+	</update>
+
+
+
+    <select id="getOldList" resultType="com.lifeix.cbs.contest.dto.bunch.BunchContest">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        startTime &lt; NOW()
+        AND status != -10
+        <if test="startId != null">
+            AND id &lt; #{startId}
+        </if>
+        ORDER BY id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="getList" resultType="com.lifeix.cbs.contest.dto.bunch.BunchContest">
+		SELECT
+		*
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+        status = 0
+        AND startTime &gt; NOW()
+		ORDER BY id DESC
+	</select>
+
+
+    <select id="getSettleList" resultType="com.lifeix.cbs.contest.dto.bunch.BunchContest">
+		SELECT
+		*
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+        <if test="status == 0">
+            status = 0
+            AND startTime &lt; NOW()
+        </if>
+        <if test="status == 1">
+            status = 1
+            AND endTime &lt; NOW()
+        </if>
+        <if test="status != 0 and status != 1">
+            status = #{status}
+        </if>
+	</select>
+
+
+    <select id="getInnerList" resultType="com.lifeix.cbs.contest.dto.bunch.BunchContest">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME"/>
+        <where>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="startId != null">
+                AND id &lt; #{startId}
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>

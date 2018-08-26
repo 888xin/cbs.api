@@ -1,0 +1,22 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+ http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<bean id="mqUtil" class="com.lifeix.cbs.api.common.mq.MqUtil" >
+	</bean>
+
+	<!-- cbs mq producer -->
+	<bean id="cbsMqProducer" class="com.lifeix.framework.message.producer.LifeixRabbitMQProducer" >
+		<property name="address" value="${cbs.mq.producer.address}" />
+		<property name="username" value="${cbs.mq.producer.username}" />
+		<property name="password" value="${cbs.mq.producer.password}" />
+		<property name="queueName" value="${cbs.mq.producer.queueName}" />
+		<property name="durable" value="${cbs.mq.producer.durable}" />
+		<property name="exchangeName" value="${cbs.mq.producer.exchangeName}" />
+		<property name="exchangeType" value="${cbs.mq.producer.exchangeType}" />
+		<property name="replyQueueName" value="${cbs.mq.producer.replyQueueName}" />
+	</bean>
+	
+</beans>

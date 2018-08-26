@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CouponMapper">
+
+	<sql id="TABLE_NAME">cbs_coupon</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.api.dto.coupon.Coupon">
+		SELECT
+		id,
+		type,
+		hour,
+		name,
+		price,
+		rangeKey,
+		rangeValue,
+		sum,
+		num,
+		proportion,
+		descr,
+		valid
+		FROM
+		<include refid="TABLE_NAME" />
+		WHERE
+		id = #{id}
+	</select>
+	
+	<insert id="insert" parameterType="com.lifeix.cbs.api.dto.coupon.Coupon">
+		INSERT INTO
+		<include refid="TABLE_NAME" />
+		(type,hour,name,price,rangeKey,rangeValue,sum,proportion,descr,valid)
+		VALUES
+		(#{type},#{hour},#{name},#{price},#{rangeKey},#{rangeValue},#{sum},#{proportion},#{descr},#{valid})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.coupon.Coupon">
+		update
+		<include refid="TABLE_NAME" />
+		<set>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="hour != null">
+				hour = #{hour},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="price != null">
+				price = #{price},
+			</if>
+			<if test="rangeKey != null">
+				rangeKey = #{rangeKey},
+			</if>
+			<if test="rangeValue != null">
+				rangeValue = #{rangeValue},
+			</if>
+			<if test="sum != null">
+				sum = #{sum},
+			</if>
+			<if test="proportion != null">
+				proportion = #{proportion},
+			</if>
+			<if test="descr != null">
+				descr = #{descr},
+			</if>
+			<if test="valid != null">
+				valid = #{valid},
+			</if>
+		</set>
+		WHERE
+		id = #{id}
+	</update>
+	
+	<update id="incrementCoupon" parameterType="com.lifeix.cbs.api.dto.coupon.Coupon">
+		update
+		<include refid="TABLE_NAME" />
+		SET num = num + 1
+		WHERE
+		id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		DELETE
+		FROM
+		<include refid="TABLE_NAME" />
+		WHERE
+		id = #{id}
+	</delete>
+
+	<select id="selectCoupons" resultType="com.lifeix.cbs.api.dto.coupon.Coupon">
+		SELECT
+		id,
+		type,
+		hour,
+		name,
+		price,
+		rangeKey,
+		rangeValue,
+		sum,
+		num,
+		proportion,
+		descr,
+		valid
+		FROM
+		<include refid="TABLE_NAME" />
+		<where>
+			<if test="type != null">
+				AND type = #{type}
+			</if>
+			<if test="valid != null">
+				AND valid = #{valid}
+			</if>
+			<if test="startId != null">
+				AND id &lt; #{startId}
+			</if>
+		</where>
+		ORDER BY id DESC
+		LIMIT #{limit}
+	</select>
+
+	<select id="findMapByIds" resultType="com.lifeix.cbs.api.dto.coupon.Coupon">
+		SELECT
+		id, 
+		type, 
+		hour, 
+		name, 
+		price, 
+		rangeKey, 
+		rangeValue, 
+		sum, 
+		num, 
+		proportion, 
+		descr, 
+		valid 
+		FROM
+		<include refid="TABLE_NAME" />
+		WHERE
+		id IN
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+
+</mapper>

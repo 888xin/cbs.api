@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MallAddressMapper">
+
+    <sql id="table_name">cbs_mall_address</sql>
+
+    <insert id="insert" parameterType="com.lifeix.cbs.mall.dto.order.MallAddress" >
+        INSERT INTO
+        <include refid="table_name"/>
+        (userId,name,mobile,address,createTime)
+        VALUES 
+        (#{userId},#{name},#{mobile},#{address},#{createTime})
+    </insert>
+
+    <select id="selectById" resultType="com.lifeix.cbs.mall.dto.order.MallAddress">
+        SELECT
+        id, userId, name, mobile, address, createTime 
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        id = #{id}
+    </select>
+
+    <update id="update" parameterType="com.lifeix.cbs.mall.dto.order.MallAddress">
+        UPDATE 
+        <include refid="table_name"/>
+        SET 
+        name=#{name}, mobile=#{mobile}, address=#{address}
+        WHERE
+        id = #{id} AND userId = #{userId}
+    </update>
+    
+    
+	<delete id="delete" >
+		DELETE FROM
+		<include refid="table_name" />
+		WHERE 
+		id=#{id}
+	</delete>
+	
+    <select id="findMallAddress" resultType="com.lifeix.cbs.mall.dto.order.MallAddress">
+        SELECT
+        id, userId, name, mobile, address, createTime 
+        FROM
+        <include refid="table_name"/>
+        WHERE userId=#{userId} LIMIT 9
+    </select>
+
+</mapper>

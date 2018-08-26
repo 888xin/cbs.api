@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.lifeix.pom</groupId>
+		<artifactId>war.pom</artifactId>
+		<version>1.3.0</version>
+	</parent>
+
+	<groupId>com.lifeix.cbs.api</groupId>
+	<artifactId>cbs.api</artifactId>
+	<packaging>pom</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>cbs.api</name>
+
+	<modules>
+		<module>cbs.api.web</module>
+		<module>cbs.api.war</module>
+		<module>cbs.api.task</module>
+		<module>cbs.api.common</module>
+		<module>cbs.api.contest.dao</module>
+		<module>cbs.api.contest.service</module>
+		<module>cbs.api.contest.impl</module>
+		<module>cbs.api.user.dao</module>
+		<module>cbs.api.user.service</module>
+		<module>cbs.api.user.impl</module>
+		<module>cbs.api.content.dao</module>
+		<module>cbs.api.content.impl</module>
+		<module>cbs.api.content.service</module>
+		<module>cbs.api.gold.dao</module>
+		<module>cbs.api.gold.impl</module>
+		<module>cbs.api.gold.service</module>
+		<module>cbs.api.message.dao</module>
+		<module>cbs.api.message.service</module>
+		<module>cbs.api.message.impl</module>
+		<module>cbs.api.mall.dao</module>
+		<module>cbs.api.mall.service</module>
+		<module>cbs.api.mall.impl</module>
+		<module>cbs.api.activity.dao</module>
+		<module>cbs.api.activity.service</module>
+		<module>cbs.api.activity.impl</module>
+	</modules>
+
+	<scm>
+		<connection>scm:git:ssh://git@pangtong.l99.com:19022/cbs-new/cbs-api.git</connection>
+		<url>scm:git:ssh://git@pangtong.l99.com:19022/cbs-new/cbs-api.git</url>
+	</scm>
+
+	<properties>
+		<metrics.version>3.0.1</metrics.version>
+		<logback.version>1.0.3</logback.version>
+		<spring3.version>3.1.4.RELEASE</spring3.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jersey.version>1.17.1</jersey.version>
+		<metrics.version>3.0.1</metrics.version>
+		<logback.version>1.0.3</logback.version>
+		<commons-httpclient.version>3.1</commons-httpclient.version>
+
+		<cbs.api.common.version>0.0.41</cbs.api.common.version>
+		<cbs.api.dao.version>0.0.2</cbs.api.dao.version>
+		<cbs.api.service.version>0.0.12</cbs.api.service.version>
+		<cbs.api.impl.version>0.0.1</cbs.api.impl.version>
+		<cbs.api.task.version>0.0.1</cbs.api.task.version>
+		<cbs.api.web.version>0.0.40</cbs.api.web.version>
+		<cbs.api.war.version>0.0.40</cbs.api.war.version>
+		<cbs.api.contest.dao.version>0.0.41</cbs.api.contest.dao.version>
+		<cbs.api.contest.service.version>0.0.41.10</cbs.api.contest.service.version>
+		<cbs.api.contest.impl.version>0.0.41.4</cbs.api.contest.impl.version>
+		<cbs.api.content.dao.version>0.0.1</cbs.api.content.dao.version>
+		<cbs.api.content.impl.version>0.0.1</cbs.api.content.impl.version>
+		<cbs.api.content.service.version>0.0.15.8</cbs.api.content.service.version>
+		<cbs.api.message.dao.version>0.0.1</cbs.api.message.dao.version>
+		<cbs.api.message.service.version>0.0.3.4</cbs.api.message.service.version>
+		<cbs.api.message.impl.version>0.0.1</cbs.api.message.impl.version>
+		<cbs.api.gold.dao.version>0.0.5.3</cbs.api.gold.dao.version>
+		<cbs.api.gold.service.version>0.0.5.8</cbs.api.gold.service.version>
+		<cbs.api.gold.impl.version>0.0.5.3</cbs.api.gold.impl.version>
+		<cbs.achieve.service.version>0.0.9</cbs.achieve.service.version>
+
+		<cbs.api.mall.dao.version>0.0.1</cbs.api.mall.dao.version>
+		<cbs.api.mall.service.version>0.0.7</cbs.api.mall.service.version>
+		<cbs.api.mall.impl.version>0.0.1</cbs.api.mall.impl.version>
+		
+		<cbs.api.activity.dao.version>0.0.1</cbs.api.activity.dao.version>
+		<cbs.api.activity.service.version>0.0.1</cbs.api.activity.service.version>
+		<cbs.api.activity.impl.version>0.0.1</cbs.api.activity.impl.version>
+		
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- 子模块项 -->
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.common</artifactId>
+				<version>${cbs.api.common.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.web</artifactId>
+				<version>${cbs.api.web.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.task</artifactId>
+				<version>${cbs.api.task.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.user</groupId>
+				<artifactId>user.service</artifactId>
+				<version>0.0.3-SNAPSHOT</version>
+			</dependency>
+
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.user.dao</artifactId>
+				<version>${cbs.api.dao.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.user.service</artifactId>
+				<version>${cbs.api.service.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.medal.tiyu</groupId>
+				<artifactId>tiyu.medal.service</artifactId>
+				<version>0.0.1</version>
+			</dependency>
+
+			<!--商城 -->
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.mall.dao</artifactId>
+				<version>${cbs.api.mall.dao.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.mall.impl</artifactId>
+				<version>${cbs.api.mall.impl.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.mall.service</artifactId>
+				<version>${cbs.api.mall.service.version}</version>
+			</dependency>
+			
+			<!--活动 -->
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.activity.dao</artifactId>
+				<version>${cbs.api.activity.dao.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.activity.impl</artifactId>
+				<version>${cbs.api.activity.impl.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.activity.service</artifactId>
+				<version>${cbs.api.activity.service.version}</version>
+			</dependency>
+
+			<!-- 成就 -->
+			<dependency>
+				<groupId>com.lifeix.cbs</groupId>
+				<artifactId>cbs.achieve.service</artifactId>
+				<version>${cbs.achieve.service.version}</version>
+			</dependency>
+
+			<!-- Qiniu -->
+			<dependency>
+				<groupId>com.qiniu</groupId>
+				<artifactId>qiniu-java-sdk</artifactId>
+				<version>6.1.9</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.image</groupId>
+				<artifactId>image.center.service</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+
+			<dependency>
+				<groupId>com.lifeix.tiyu</groupId>
+				<artifactId>community.message.service</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.user.impl</artifactId>
+				<version>${cbs.api.impl.version}</version>
+			</dependency>
+
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.contest.dao</artifactId>
+				<version>${cbs.api.contest.dao.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.contest.service</artifactId>
+				<version>${cbs.api.contest.service.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.contest.impl</artifactId>
+				<version>${cbs.api.contest.impl.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.message.dao</artifactId>
+				<version>${cbs.api.message.dao.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.message.service</artifactId>
+				<version>${cbs.api.message.service.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.message.impl</artifactId>
+				<version>${cbs.api.message.impl.version}</version>
+			</dependency>
+
+			<!-- 金币系统子模块 -->
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.gold.service</artifactId>
+				<version>${cbs.api.gold.service.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.gold.dao</artifactId>
+				<version>${cbs.api.gold.dao.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.gold.impl</artifactId>
+				<version>${cbs.api.gold.impl.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.payment</groupId>
+				<artifactId>lifeix-payment-client</artifactId>
+				<version>1.23</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.content.dao</artifactId>
+				<version>${cbs.api.content.dao.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.content.service</artifactId>
+				<version>${cbs.api.content.service.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.cbs.api</groupId>
+				<artifactId>cbs.api.content.impl</artifactId>
+				<version>${cbs.api.content.impl.version}</version>
+			</dependency>
+
+			<!-- lifeix 公共项目 -->
+			<dependency>
+				<groupId>com.lifeix</groupId>
+				<artifactId>lifeix-common-client</artifactId>
+				<version>0.0.35.69</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix</groupId>
+				<artifactId>lifeix-common</artifactId>
+				<version>0.0.6</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.framework</groupId>
+				<artifactId>framework.memcache</artifactId>
+				<version>1.0.4</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.lifeix.framework</groupId>
+				<artifactId>framework.redis</artifactId>
+				<version>1.0.9</version>
+			</dependency>
+
+			<dependency>
+				<groupId>ipdata</groupId>
+				<artifactId>ipdata</artifactId>
+				<version>1.0.1-release</version>
+			</dependency>
+			<dependency>
+				<groupId>com.lifeix.nyx</groupId>
+				<artifactId>relationship.service</artifactId>
+				<version>0.0.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.anti</groupId>
+				<artifactId>sensitiveword.service</artifactId>
+				<version>1.0.4-SNAPSHOT</version>
+			</dependency>
+
+			<!-- spring -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aop</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-asm</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aspects</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.web.servlet</groupId>
+				<artifactId>org.springframework.web.servlet</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.web.portlet</groupId>
+				<artifactId>org.springframework.web.portlet</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.web.struts</groupId>
+				<artifactId>org.springframework.web.struts</artifactId>
+				<version>${spring3.version}</version>
+			</dependency>
+
+			<!-- mybaits -->
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis</artifactId>
+				<version>3.2.7</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis-spring</artifactId>
+				<version>1.2.2</version>
+			</dependency>
+
+			<!-- mysql -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>5.1.38</version>
+			</dependency>
+
+			<!-- beanutils -->
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>1.8.3</version>
+			</dependency>
+
+
+			<!-- for test start -->
+			<dependency>
+				<groupId>asm</groupId>
+				<artifactId>asm-all</artifactId>
+				<version>3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.dbunit</groupId>
+				<artifactId>dbunit</artifactId>
+				<version>2.4.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.fitnesse</groupId>
+				<artifactId>fitnesse</artifactId>
+				<version>20140418</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-all</artifactId>
+				<version>1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>jline</groupId>
+				<artifactId>jline</artifactId>
+				<version>0.9.94</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jmock</groupId>
+				<artifactId>jmock</artifactId>
+				<version>2.5.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jmock</groupId>
+				<artifactId>jmock-legacy</artifactId>
+				<version>2.5.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>6.8.8</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unitils</groupId>
+				<artifactId>unitils</artifactId>
+				<version>2.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jtester</groupId>
+				<artifactId>jtester</artifactId>
+				<version>0.8.2</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.11</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>1.7</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-dbcp</groupId>
+				<artifactId>commons-dbcp</artifactId>
+				<version>1.4</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.test4j</groupId>
+				<artifactId>test4j.testng</artifactId>
+				<version>2.0.6</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.test4j</groupId>
+				<artifactId>test4j.integrated</artifactId>
+				<version>2.0.6</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.test4j</groupId>
+				<artifactId>test4j.spec</artifactId>
+				<version>2.0.6</version>
+				<scope>test</scope>
+			</dependency>
+			<!-- for test end -->
+
+
+			<!-- logback -->
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>1.1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>1.1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-access</artifactId>
+				<version>1.1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>net.logstash.logback</groupId>
+				<artifactId>logstash-logback-encoder</artifactId>
+				<version>3.0</version>
+			</dependency>
+
+			<!-- logstash json encoder -->
+			<dependency>
+				<groupId>net.logstash.logback</groupId>
+				<artifactId>logstash-logback-encoder</artifactId>
+				<version>1.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.6.4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo</artifactId>
+				<exclusions>
+					<exclusion>
+						<artifactId>spring</artifactId>
+						<groupId>org.springframework</groupId>
+					</exclusion>
+				</exclusions>
+				<version>2.5.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.openejb</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>5.0-1</version>
+				<scope>provided</scope>
+			</dependency>
+
+
+			<dependency>
+				<groupId>com.lifeix</groupId>
+				<artifactId>lifeix-common-util</artifactId>
+				<version>0.0.7.1-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.common</groupId>
+				<artifactId>common.healthcheck</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<!-- XConfig 配置集中�? -->
+			<dependency>
+				<groupId>com.l99.operations</groupId>
+				<artifactId>xconfig</artifactId>
+				<version>1.1.0-Beta4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.sun.jersey.contribs</groupId>
+				<artifactId>jersey-apache-client</artifactId>
+				<version>1.10</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-server</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-bundle</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-core</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-json</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey.contribs</groupId>
+				<artifactId>jersey-multipart</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-client</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey.contribs</groupId>
+				<artifactId>jersey-spring</artifactId>
+				<version>${jersey.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-mapper-asl</artifactId>
+				<version>1.5.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-fileupload</groupId>
+				<artifactId>commons-fileupload</artifactId>
+				<version>1.2.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>jaxen</groupId>
+				<artifactId>jaxen</artifactId>
+				<version>1.1-beta-6</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix</groupId>
+				<artifactId>lifeix-comment-client</artifactId>
+				<version>0.8.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.common</groupId>
+				<artifactId>lifeix-user-api-interface</artifactId>
+				<version>0.1.8-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.sgroschupf</groupId>
+				<artifactId>zkclient</artifactId>
+				<version>0.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.tencent.xinge</groupId>
+				<artifactId>xinge</artifactId>
+				<version>1.1.5</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.common</groupId>
+				<artifactId>common.net</artifactId>
+				<version>0.0.5</version>
+			</dependency>
+
+
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.3.4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpmime</artifactId>
+				<version>4.3.4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpcore</artifactId>
+				<version>4.4.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.mongodb</groupId>
+				<artifactId>mongo-java-driver</artifactId>
+				<version>2.11.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix</groupId>
+				<artifactId>lifeix-common-util</artifactId>
+				<version>0.0.7.6-SNAPSHOT</version>
+			</dependency>
+
+			<!-- Spring Data Library -->
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-commons</artifactId>
+				<version>1.9.0.RELEASE</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-redis</artifactId>
+				<version>1.4.0.RELEASE</version>
+			</dependency>
+
+			<!-- Redis Driver Library -->
+			<dependency>
+				<groupId>redis.clients</groupId>
+				<artifactId>jedis</artifactId>
+				<version>2.5.2</version>
+			</dependency>
+
+			<!-- XConfig 配置集中化 -->
+			<dependency>
+				<groupId>com.l99.operations</groupId>
+				<artifactId>xconfig</artifactId>
+				<version>1.1.0-Beta4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.sun.jersey.contribs</groupId>
+				<artifactId>jersey-apache-client</artifactId>
+				<version>1.10</version>
+			</dependency>
+
+			<!-- tiyu news -->
+			<dependency>
+				<groupId>com.lifeix.tiyu</groupId>
+				<artifactId>tiyu.content.service</artifactId>
+				<version>0.0.39.0</version>
+			</dependency>
+
+			<!-- image upload -->
+			<dependency>
+				<groupId>com.lifeix.image</groupId>
+				<artifactId>image.center.service</artifactId>
+				<version>0.0.2-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.googlecode.xmemcached</groupId>
+				<artifactId>xmemcached</artifactId>
+				<version>1.4.1</version>
+			</dependency>
+
+			<!-- MQ -->
+			<dependency>
+				<groupId>org.springframework.amqp</groupId>
+				<artifactId>spring-rabbit</artifactId>
+				<version>1.4.3.RELEASE</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.framework</groupId>
+				<artifactId>framework.message</artifactId>
+				<version>1.0.7-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.lifeix.framework</groupId>
+				<artifactId>framework.kafka</artifactId>
+				<version>0.0.7</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+</project>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserWinningRankDayLogMapper">
+	<select id="findRankByYearAndDay" resultType="com.lifeix.cbs.api.dto.rank.UserWinningRankDayLog">
+		SELECT
+		year,day,firstIds,lastIds
+		FROM ${table}  
+		WHERE 
+		year = #{year} and day = #{day}
+		LIMIT 1
+	</select>
+	
+	<insert id="insert"
+		parameterType="com.lifeix.cbs.api.dto.rank.UserWinningRankLog"
+		useGeneratedKeys="true" keyProperty="userId">
+		INSERT INTO
+		${table}
+		(year,day,firstIds,lastIds)
+		VALUES
+		(#{year},#{day},#{firstIds},#{lastIds})
+	</insert>
+	
+	
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.rank.UserWinningRankLog">
+		UPDATE
+		${table}
+		SET firstIds=#{firstIds}, lastIds=#{lastIds} WHERE year=#{year} AND day=#{day}
+	</update>
+	
+</mapper>

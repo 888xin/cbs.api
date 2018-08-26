@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserRankLogMapper">
+	<select id="findAll" resultType="com.lifeix.cbs.api.dto.user.CbsUserRankLog">
+		SELECT
+		logId,rank,updateTime
+		FROM cbs_user_rank_log  
+	</select>
+	
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.user.CbsUserRankLog">
+		UPDATE  
+		cbs_user_rank_log 
+		SET 
+		rank = #{rank}, updateTime = now()
+		WHERE logId = #{logId}
+	</update>
+	
+	<insert id="insert" parameterType="com.lifeix.cbs.api.dto.user.CbsUserRankLog" useGeneratedKeys="true" keyProperty="logId" >
+		INSERT INTO 
+		cbs_user_rank_log (logId,rank,updateTime) 
+		VALUES (#{logId},#{rank},now())
+	</insert>
+	
+</mapper>

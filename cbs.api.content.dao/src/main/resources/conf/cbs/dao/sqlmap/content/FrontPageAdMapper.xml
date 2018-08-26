@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FrontPageAdMapper">
+
+    <sql id="table_name">cbs_front_page_ad</sql>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.content.dto.frontpage.FrontPage" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+        <include refid="table_name"/>
+		 (userId,type,content,contentId,contestId,contestType)
+		VALUES
+		(#{userId},#{type},#{content},#{contentId},#{innnerContestId},#{innnercontestType})
+	</insert>
+	
+	<select id="findMapByIds" resultType="com.lifeix.cbs.content.dto.frontpage.FrontPage">
+		SELECT
+        id,userId,type,content,createTime,status,contentId,contestId as innnerContestId,contestType as innnercontestType
+        FROM
+        <include refid="table_name"/>
+		WHERE id IN
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+        AND (status = 0 OR status = 1)
+	</select>
+	
+	<select id="findById" resultType="com.lifeix.cbs.content.dto.frontpage.FrontPage">
+		SELECT
+        id,userId,type,content,createTime,status,contentId,contestId as innnerContestId,contestType as innnercontestType
+        FROM
+        <include refid="table_name"/>
+		WHERE id = #{id}
+	</select>
+
+    <select id="findFrontPages" resultType="com.lifeix.cbs.content.dto.frontpage.FrontPage">
+        SELECT
+        id,userId,type,content,createTime,status,contentId,contestId as innnerContestId,contestType as innnercontestType
+        FROM
+        <include refid="table_name"/>
+        <where>
+            <if test="type != null and type != -100">
+                AND type = #{type}
+            </if>
+            <if test="startId != null">
+                AND id &lt; #{startId}
+            </if>
+            AND (status = 0 OR status = 1)
+        </where>
+        ORDER BY id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="findFrontPagesInner" resultType="com.lifeix.cbs.content.dto.frontpage.FrontPage">
+        SELECT
+        id,userId,type,content,createTime,status,contentId,contestId as innnerContestId,contestType as innnercontestType
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        1=1
+        <if test="type != null and type != -100">
+            AND type = #{type}
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="startId != null">
+            AND id &lt; #{startId}
+            ORDER BY id DESC
+        </if>
+        <if test="endId != null">
+            AND id &gt; #{endId}
+            ORDER BY id ASC
+        </if>
+        <if test="endId == null and startId == null">
+            ORDER BY id DESC
+        </if>
+        <if test="skip == null">
+            LIMIT #{limit}
+        </if>
+        <if test="skip != null">
+            LIMIT #{skip},#{limit}
+        </if>
+    </select>
+
+    <select id="findFrontPagesCount" resultType="int">
+        SELECT
+        COUNT(*)
+        FROM
+        <include refid="table_name"/>
+        <where>
+            <if test="type != null and type != -100">
+                AND type = #{type}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <update id="editFrontPagesInner">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="status != null">
+                status=#{status},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="deleteFrontPagesByContentId">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="status != null">
+                status=#{status},
+            </if>
+        </set>
+        WHERE
+        contentId = #{contentId}
+    </update>
+
+    <select id="findByContentId" resultType="com.lifeix.cbs.content.dto.frontpage.FrontPage">
+        SELECT * FROM
+        <include refid="table_name"/>
+        WHERE contentId = #{contentId}
+    </select>
+	
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserContestStatisticsMapper">
+	<select id="getUserContestStatistics" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatistics">
+		SELECT
+		userId,
+		betCount, 
+		winCount, 
+		drawCount, 
+		lossCount, 
+		winning, 
+		conWinCount, 
+		maxConWinCount, 
+		conLossCount, 
+		maxConLossCount, 
+		winOdds,lossOdds,betGold,winGold,lossGold,roi,score, rank,lockerId,contestCount
+		FROM cbs_user_contest_statistics  
+		WHERE 
+		userId = #{userId}
+		LIMIT 1
+	</select>
+	
+	<insert id="insert"
+		parameterType="com.lifeix.cbs.api.dto.rank.UserContestStatistics"
+		useGeneratedKeys="true" keyProperty="userId">
+		INSERT INTO
+		cbs_user_contest_statistics
+		(userId,betCount, winCount, drawCount, lossCount, winning,conWinCount, 
+		maxConWinCount, conLossCount, maxConLossCount, winOdds,
+		lossOdds,betGold,winGold,lossGold,roi,score, rank,lockerId,contestCount)
+		VALUES
+		(#{userId},#{betCount},#{winCount},#{drawCount},#{lossCount},#{winning},#{conWinCount},
+		#{maxConWinCount},#{conLossCount},#{maxConLossCount},#{winOdds},
+		#{lossOdds},#{betGold},#{winGold},#{lossGold},#{roi},#{score},#{rank},#{lockerId},#{contestCount})
+	</insert>
+	
+	<update id="updateWithLockerId" parameterType="com.lifeix.cbs.api.dto.rank.UserContestStatistics">
+		UPDATE  
+		cbs_user_contest_statistics 
+		 SET betCount=#{betCount}, winCount=#{winCount}, drawCount=#{drawCount}, lossCount=#{lossCount}, 
+		 winning=#{winning}, conWinCount=#{conWinCount}, maxConWinCount=#{maxConWinCount}, conLossCount=#{conLossCount}, 
+		 maxConLossCount=#{maxConLossCount}, winOdds=#{winOdds}, lossOdds=#{lossOdds}, betGold=#{betGold}, winGold=#{winGold}, 
+		 lossGold=#{lossGold}, roi=#{roi}, score=#{score}, rank=#{rank}, lockerId=#{lockerId} ,contestCount=#{contestCount} 
+		 WHERE userId=#{userId} AND lockerId=#{lastLockerId}
+	</update>
+	
+	
+	<select id="selectByIds" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatistics">
+		SELECT
+		userId,
+		betCount, 
+		winCount, 
+		drawCount, 
+		lossCount, 
+		winning, 
+		conWinCount, 
+		maxConWinCount, 
+		conLossCount, 
+		maxConLossCount, 
+		winOdds,lossOdds,betGold,winGold,lossGold,roi,score, rank,lockerId,contestCount
+		FROM cbs_user_contest_statistics 
+		WHERE userId IN 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+	        #{item}
+	  	</foreach>
+	</select>
+	
+	
+	<select id="findUserContestStatisticsMap" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatistics">
+		SELECT
+		userId,
+		score
+		FROM cbs_user_contest_statistics 
+	</select>
+	
+	<!-- 获取下单不少于40场的用户的投资回报率排行 -->
+	<select id="findUserContestStatisticsRoiMap" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatistics">
+		SELECT
+		userId,
+		roi
+		FROM cbs_user_contest_statistics
+		where betCount  &gt;= 40
+		ORDER BY roi DESC
+		limit 1000
+	</select>
+	
+	<!-- 获取下单不少于10场的用户胜率排行 -->
+	<select id="findUserContestStatisticsWinningMap" resultType="com.lifeix.cbs.api.dto.rank.UserContestStatistics">
+		SELECT
+		userId,
+		winning
+		FROM cbs_user_contest_statistics
+		WHERE betCount &gt;= 10
+		ORDER BY winning DESC
+		limit 1000
+	</select>
+	
+</mapper>

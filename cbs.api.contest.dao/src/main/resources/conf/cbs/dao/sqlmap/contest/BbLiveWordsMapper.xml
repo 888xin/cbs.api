@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BbLiveWordsMapper">
+
+	<sql id="TAB_NAME">cbs_bb_live_words</sql>
+	
+	<select id="selectByContestId" resultType="com.lifeix.cbs.contest.dto.bb.BbLiveWords">
+		SELECT 
+		phraseId,contestId,textContent,homeScores,awayScores,
+		periodType,periodNumber,clock,location,team,eventType,disabled,sequence  
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		contestId = #{contestId} 
+		<if test="endId != null">  
+            AND phraseId &gt; #{endId}  
+        </if>  
+		ORDER BY phraseId DESC 
+	</select>
+	
+	<select id="selectByContestIdNew" resultType="com.lifeix.cbs.contest.dto.bb.BbLiveWords">
+		SELECT 
+		phraseId,contestId,textContent,homeScores,awayScores,
+		periodType,periodNumber,clock,location,team,eventType,disabled,sequence 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		contestId = #{contestId} 
+   		<choose>
+	       	<when test="endId != null and endId > 0">
+	       		AND sequence &gt; #{endId}  
+	       	</when>
+	       	<otherwise>
+	       		AND sequence &gt; 0
+	       	</otherwise>
+        </choose>
+        AND disabled = FALSE 
+		ORDER BY sequence DESC 
+	</select>
+	
+	<update id="saveLiveWords" parameterType="java.util.List">
+		INSERT INTO 
+		<include refid="TAB_NAME" />
+		    (phraseId,contestId,textContent,homeScores,awayScores,
+		    periodType,periodNumber,clock,location,team,eventType,disabled,sequence,createTime)  
+	    VALUES  
+	    <foreach collection="list" index="index" item="item" separator=",">  
+	        (#{item.phraseId},#{item.contestId},#{item.textContent},
+	        #{item.homeScores},#{item.awayScores},#{item.periodType},#{item.periodNumber},
+	        #{item.clock},#{item.location},#{item.team},#{item.eventType},#{item.disabled},#{item.sequence},NOW()) 
+	    </foreach> 
+	    ON DUPLICATE KEY UPDATE 
+		textContent = VALUES(textContent),  
+		homeScores = VALUES(homeScores),  
+		awayScores = VALUES(awayScores),  
+		periodType = VALUES(periodType),  
+		periodNumber = VALUES(periodNumber),  
+		clock = VALUES(clock),  
+		location = VALUES(location),  
+		team = VALUES(team),  
+		eventType = VALUES(eventType),  
+		disabled = VALUES(disabled),  
+		sequence = VALUES(sequence) 
+	</update>
+
+</mapper>

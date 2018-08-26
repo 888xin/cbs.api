@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BunchBetMapper">
+
+    <sql id="TAB_NAME">cbs_bunch_bet</sql>
+
+    <select id="selectById" resultType="com.lifeix.cbs.contest.dto.bunch.BunchBet">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="selectByUser" resultType="com.lifeix.cbs.contest.dto.bunch.BunchBet">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        bunchId = #{bunchId}
+        AND userId = #{userId}
+        LIMIT 1
+    </select>
+
+    <select id="selectByUsers" resultType="com.lifeix.cbs.contest.dto.bunch.BunchBet">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        userId in
+        <foreach item="item" index="index" collection="userIds"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND bunchId = #{bunchId}
+    </select>
+
+    <insert id="insert" parameterType="com.lifeix.cbs.contest.dto.bunch.BunchBet">
+        INSERT INTO
+        <include refid="TAB_NAME"/>
+        (userId, bunchId, support)
+        VALUES
+        (#{userId},#{bunchId},#{support})
+    </insert>
+
+    <update id="update" parameterType="com.lifeix.cbs.contest.dto.bunch.BunchBet">
+        UPDATE
+        <include refid="TAB_NAME"/>
+        <set>
+            <if test="bunchId != null">
+                bunchId=#{bunchId},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="support != null">
+                support=#{support},
+            </if>
+            <if test="winNum != null">
+                winNum=#{winNum},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="updateBatch"  parameterType="java.util.List">
+
+        <foreach collection="list" item="item" index="index" open="" close=";" separator=";">
+            UPDATE
+            <include refid="TAB_NAME"/>
+            <set>
+                status=${item.status}
+            </set>
+            where id = ${item.id}
+        </foreach>
+
+    </update>
+
+    <select id="getList" resultType="com.lifeix.cbs.contest.dto.bunch.BunchBet">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME"/>
+        <where>
+            <if test="userId != null">
+                AND userId = #{userId}
+            </if>
+            <if test="startId != null">
+                AND id &lt; #{startId}
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="getAwardsList" resultType="com.lifeix.cbs.contest.dto.bunch.BunchBet">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        bunchId = #{bunchId}
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        ORDER BY winNum DESC
+        LIMIT #{skip}, #{limit}
+    </select>
+
+    <select id="getListByBunchId" resultType="com.lifeix.cbs.contest.dto.bunch.BunchBet">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME"/>
+        <where>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="bunchId != null">
+                AND bunchId = #{bunchId}
+            </if>
+            <if test="startId != null">
+                AND id &lt; #{startId}
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="getListOrderByWinNum" resultType="com.lifeix.cbs.contest.dto.bunch.BunchBet">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        bunchId = #{bunchId}
+        ORDER BY winNum DESC
+        LIMIT #{skip}, #{limit}
+    </select>
+
+</mapper>

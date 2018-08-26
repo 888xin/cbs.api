@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BetRobotMapper">
+
+	<sql id="TAB_NAME">cbs_robot_bet</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.robot.BetRobot">
+		SELECT 
+		userId,
+		userInfo,
+		fbOdds,
+		bbOdds,
+		setting,
+		history,
+		betTime,
+		gameFlag,
+		gameTime,
+		pkFlag,
+		createTime,
+		updateTime,
+		closeFlag,
+		callCount 
+		FROM 
+		<include refid="TAB_NAME" /> 
+		WHERE 
+		userId = #{userId} 
+		LIMIT 1 
+	</select>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.robot.BetRobot" >
+		INSERT INTO 
+		<include refid="TAB_NAME" /> 
+		(userId, userInfo, fbOdds, bbOdds, setting, history, betTime, gameFlag, pkFlag, createTime, closeFlag)  
+		VALUES 
+		(#{userId},#{userInfo},#{fbOdds},#{bbOdds},#{setting},#{history},#{betTime},#{gameFlag},#{pkFlag},NOW(),#{closeFlag}) 
+	</insert>
+	
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.robot.BetRobot" >
+		UPDATE  
+		<include refid="TAB_NAME" /> 
+		SET userInfo=#{userInfo}, fbOdds=#{fbOdds}, bbOdds=#{bbOdds}, setting=#{setting}, history=#{history}, betTime=#{betTime}, 
+		gameFlag=#{gameFlag}, gameTime=#{gameTime}, pkFlag=#{pkFlag}, closeFlag=#{closeFlag}, callCount=#{callCount} 
+		WHERE userId=#{userId} 
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM <include refid="TAB_NAME" /> 
+		WHERE userId = #{userId} 
+	</delete>
+	
+	<select id="getRobotCount" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(*)
+		FROM <include refid="TAB_NAME" />
+		<where>
+			<if test="closeFlag != null">
+				closeFlag = #{closeFlag} 
+			</if>
+		</where>
+	</select>
+	
+	<select id="findRobotList" resultType="com.lifeix.cbs.contest.dto.robot.BetRobot">
+		SELECT 
+		userId,
+		userInfo,
+		fbOdds,
+		bbOdds,
+		setting,
+		history,
+		betTime,
+		gameFlag,
+		gameTime,
+		pkFlag,
+		createTime,
+		updateTime,
+		closeFlag,
+		callCount 
+		FROM 
+		<include refid="TAB_NAME" />
+		<where> 
+			<if test="closeFlag !=  null" >
+	    	 	closeFlag = #{closeFlag} 
+			</if>
+		</where>
+		ORDER BY createTime ASC 
+		LIMIT #{start}, #{num} 
+	</select>
+	
+</mapper>

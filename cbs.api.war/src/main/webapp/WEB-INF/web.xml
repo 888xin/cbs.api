@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+	<!-- Admin Servlet -->
+	<servlet>
+		<servlet-name>Admin Servlet</servlet-name>
+		<servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Admin Servlet</servlet-name>
+		<url-pattern>/lifeix-metrics</url-pattern>
+	</servlet-mapping>
+
+
+	<!-- Ping Servlet -->
+	<servlet>
+		<servlet-name>Ping Servlet</servlet-name>
+		<servlet-class>com.codahale.metrics.servlets.PingServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Ping Servlet</servlet-name>
+		<url-pattern>/lifeix-metrics/ping</url-pattern>
+	</servlet-mapping>
+
+	<!-- Threads Servlet -->
+	<servlet>
+		<servlet-name>Threads Servlet</servlet-name>
+		<servlet-class>com.codahale.metrics.servlets.ThreadDumpServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Threads Servlet</servlet-name>
+		<url-pattern>/lifeix-metrics/threads</url-pattern>
+	</servlet-mapping>
+
+	<!-- Healthcheck Servlet -->
+	<servlet>
+		<servlet-name>Healthcheck Servlet</servlet-name>
+		<servlet-class>com.codahale.metrics.servlets.HealthCheckServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Healthcheck Servlet</servlet-name>
+		<url-pattern>/lifeix-metrics/healthcheck</url-pattern>
+	</servlet-mapping>
+
+	<!-- Metrics Servlet -->
+	<servlet>
+		<servlet-name>Metrics Servlet</servlet-name>
+		<servlet-class>com.codahale.metrics.servlets.MetricsServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Metrics Servlet</servlet-name>
+		<url-pattern>/lifeix-metrics/metrics</url-pattern>
+	</servlet-mapping>
+	
+	<filter>
+		<filter-name>authFilter</filter-name>
+		<filter-class>com.lifeix.cbs.api.util.BasicAuthenticationFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>authFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<servlet>
+		<servlet-name>restful</servlet-name>
+		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>com.lifeix.cbs.api.action</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<listener>
+		<listener-class>com.lifeix.cbs.api.util.InitListener</listener-class>
+	</listener>
+
+	<servlet-mapping>
+		<servlet-name>restful</servlet-name>
+		<url-pattern>/cbs/*</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+	    <param-name>contextConfigLocation</param-name>
+	    <param-value>classpath:conf/cbs-content-application-context.xml</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

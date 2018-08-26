@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CbsUserLoginMapper">
+	<select id="selectById" resultType="com.lifeix.cbs.api.dto.user.CbsUserLogin">
+		SELECT
+		userId, 
+		loginToken, 
+		machineCode, 
+		client, 
+		ipaddress, 
+		loginTime, 
+		continuLogin
+		FROM cbs_user_login  
+		WHERE 
+		userId = #{userId}
+		LIMIT 1
+	</select>
+	
+	<insert id="insert" parameterType="com.lifeix.cbs.api.dto.user.CbsUserLogin" >
+		INSERT INTO 
+		cbs_user_login (userId, loginToken, machineCode, client, ipaddress, loginTime, continuLogin) 
+		VALUES (#{userId},#{loginToken},#{machineCode},#{client},#{ipaddress},#{loginTime},#{continuLogin})
+	</insert>
+	
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.user.CbsUserLogin">
+		UPDATE  
+		cbs_user_login 
+		SET 
+		loginToken=#{loginToken}, machineCode=#{machineCode}, client=#{client}, ipaddress=#{ipaddress}, loginTime=#{loginTime}, continuLogin=#{continuLogin} 
+		WHERE userId = #{userId}
+	</update>
+
+
+	
+</mapper>

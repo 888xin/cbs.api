@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BbBetOddevenMapper">
+
+    <sql id="TAB_NAME">cbs_bb_bet_oddeven</sql>
+
+    <sql id="SELECT_COLUMN">bId, contestId, userId, isLongbi, support, oddRoi, evenRoi, bet, coupon, back,
+                    status, createTime, contentId, ipaddress, client</sql>
+
+    <select id="selectById" resultType="com.lifeix.cbs.contest.dto.bet.BetOddeven">
+        SELECT
+        <include refid="SELECT_COLUMN" />
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        bId = #{bId}
+        LIMIT 1
+    </select>
+
+    <insert id="insertAndGetPrimaryKey" parameterType="com.lifeix.cbs.contest.dto.bet.BetOddeven"
+            useGeneratedKeys="true" keyProperty="bId">
+        INSERT INTO
+        <include refid="TAB_NAME"/>
+        (contestId, userId, isLongbi, support, oddRoi, evenRoi, bet, coupon, back, status, createTime,
+        contentId,
+        ipaddress, client)
+        VALUES
+        (#{contestId},#{userId},#{isLongbi},#{support},#{oddRoi},#{evenRoi},#{bet},#{coupon},#{back},#{status},#{createTime},#{contentId},#{ipaddress},#{client})
+    </insert>
+
+    <select id="selectByBet" resultType="com.lifeix.cbs.contest.dto.bet.BetOddeven">
+        SELECT
+        <include refid="SELECT_COLUMN" />
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        contestId = #{contestId}
+        AND
+        userId = #{userId}
+        AND
+        support = #{support}
+        LIMIT 1
+    </select>
+
+    <update id="updateContentId" parameterType="com.lifeix.cbs.contest.dto.bet.BetOddeven">
+        UPDATE
+        <include refid="TAB_NAME"/>
+        SET
+        contentId=#{contentId}
+        WHERE
+        bId=#{bId}
+    </update>
+
+    <update id="updateContentIdById">
+        UPDATE
+        <include refid="TAB_NAME"/>
+        SET
+        contentId=#{contentId}
+        WHERE
+        bId=#{bId} AND contentId is null
+    </update>
+
+    <update id="updateSettle">
+        UPDATE
+        <include refid="TAB_NAME"/>
+        SET
+        back=#{back}, status=#{status}
+        WHERE
+        bId=#{bId}
+    </update>
+
+    <select id="findBbBetOddeven" resultType="com.lifeix.cbs.contest.dto.bet.BetOddeven">
+        SELECT
+        <include refid="SELECT_COLUMN" />
+        FROM
+        <include refid="TAB_NAME"/>
+        <where>
+            <if test="contestId !=  null">
+                AND contestId = #{contestId}
+            </if>
+            <if test="userId !=  null">
+                AND userId= #{userId}
+            </if>
+            <if test="status !=  null">
+                AND status= #{status}
+            </if>
+            <if test="startId != null">
+                AND bId &gt; #{startId}
+            </if>
+            ORDER BY bId ASC
+            LIMIT #{limit}
+        </where>
+    </select>
+
+
+    <select id="findBbBetOddevenList" resultType="com.lifeix.cbs.contest.dto.bet.BetOddeven">
+        SELECT
+        <include refid="SELECT_COLUMN" />
+        FROM
+        <include refid="TAB_NAME"/>
+        <where>
+            <if test="contestId !=  null">
+                AND contestId = #{contestId}
+            </if>
+            <if test="userId !=  null">
+                AND userId= #{userId}
+            </if>
+            <if test="status !=  null">
+                AND status= #{status}
+            </if>
+            <if test="startId != null">
+                AND bId &lt; #{startId}
+            </if>
+            <if test="startTime != null">
+                AND createTime &gt; #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND createTime &lt; #{endTime}
+            </if>
+        </where>
+        ORDER BY bId DESC
+        LIMIT #{limit}
+    </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        bId = #{id}
+    </delete>
+
+    <select id="findBbBetOddevenByContestId" resultType="com.lifeix.cbs.contest.dto.bet.BetOddeven">
+        SELECT
+        <include refid="SELECT_COLUMN" />
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        contestId = #{contestId}
+        <if test="startId != null">
+            AND bId &gt; #{startId}
+        </if>
+        ORDER BY bId
+        LIMIT #{limit}
+    </select>
+
+    <select id="countUserMixBet" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        contestId = #{contestId}
+        AND userId=#{userId}
+        AND isLongbi=TRUE
+        AND coupon &gt; 0
+    </select>
+
+    <select id="selectByContent" resultType="com.lifeix.cbs.contest.dto.bet.BetOddeven">
+        SELECT
+        <include refid="SELECT_COLUMN" />
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE
+        contentId = #{contentId}
+        LIMIT 1
+    </select>
+
+</mapper>

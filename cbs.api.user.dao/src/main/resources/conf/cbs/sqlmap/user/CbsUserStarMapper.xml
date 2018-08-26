@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CbsUserStarMapper">
+
+	<sql id="TAB_NAME">cbs_user_star</sql>
+	
+	<select id="selectByUser" resultType="com.lifeix.cbs.api.dto.user.CbsUserStar">
+		SELECT
+		id, 
+		userId, 
+		rank, 
+		winning, 
+		showNum, 
+		hitNum, 
+		factor, 
+		hideFlag, 
+		createTime 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE
+		userId = #{userId}
+		LIMIT 1
+	</select>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.api.dto.user.CbsUserStar" >
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(userId, rank, winning, showNum, hitNum, factor, hideFlag, createTime)
+		VALUES 
+		(#{userId},#{rank},#{winning},#{showNum},#{hitNum}, #{factor},#{hideFlag},#{createTime})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.user.CbsUserStar">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		hideFlag=#{hideFlag}  
+		WHERE userId = #{userId}
+	</update>
+
+	<delete id="deleteByUser">
+		DELETE FROM <include refid="TAB_NAME" /> 
+		WHERE userId = #{userId} 
+	</delete>
+
+	<update id="updateNum" parameterType="com.lifeix.cbs.api.dto.user.CbsUserStar">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		showNum=#{showNum},hitNum=#{hitNum} 
+		WHERE userId = #{userId}
+	</update>
+
+	<select id="findAllStars" resultType="com.lifeix.cbs.api.dto.user.CbsUserStar">
+		SELECT
+		id, 
+		userId, 
+		rank, 
+		winning, 
+		showNum, 
+		hitNum, 
+		factor, 
+		hideFlag, 
+		createTime 
+		FROM 
+		<include refid="TAB_NAME" />
+		<where>
+            <if test="hideFlag != null">
+                AND hideFlag = #{hideFlag}
+            </if>
+            <if test="startId != null">
+			AND id &lt; #{startId}
+            </if>
+        </where>
+		ORDER BY id DESC  
+		LIMIT #{limit}
+	</select>
+	
+	<select id="findStarUsers" resultType="com.lifeix.cbs.api.dto.user.CbsUserStar">
+		SELECT
+		id, 
+		userId, 
+		rank, 
+		winning, 
+		showNum, 
+		hitNum, 
+		factor, 
+		hideFlag, 
+		createTime 
+		FROM 
+		<include refid="TAB_NAME" /> 
+		WHERE
+		hideFlag = FALSE 
+		ORDER BY id DESC 
+		LIMIT #{limit}
+	</select>
+
+    <select id="findAllStarsUserIds" resultType="long">
+        SELECT
+        userId
+        FROM
+        <include refid="TAB_NAME" />
+        WHERE hideFlag = false
+    </select>
+
+    <select id="findMapByUserIds" resultType="com.lifeix.cbs.api.dto.user.CbsUserStar">
+        SELECT * FROM
+        <include refid="TAB_NAME" />
+        WHERE userId IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

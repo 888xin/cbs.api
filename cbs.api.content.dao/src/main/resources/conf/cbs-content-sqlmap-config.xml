@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<mappers>
+
+		<mapper resource="conf/cbs/dao/sqlmap/content/FrontPageMapper.xml" />
+		<mapper resource="conf/cbs/dao/sqlmap/content/FrontPageAdMapper.xml" />
+		<mapper resource="conf/cbs/dao/sqlmap/content/FrontCardMapper.xml" />
+		
+		<mapper resource="conf/cbs/dao/sqlmap/content/InformMapper.xml" />
+
+		<mapper resource="conf/cbs/dao/sqlmap/content/ZodiacAnimalMapper.xml" />
+		<mapper resource="conf/cbs/dao/sqlmap/content/ZodiacAnimalBetMapper.xml" />
+
+
+		<mapper resource="conf/cbs/dao/sqlmap/content/ContestNewsMapper.xml" />
+		<mapper resource="conf/cbs/dao/sqlmap/content/BootInfoMapper.xml" />
+		
+
+		
+	</mappers>
+
+</configuration>

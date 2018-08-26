@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MissionGoldMapper">
+
+	<sql id="TABLE_NAME">cbs_mission_gold</sql>
+
+    <select id="findById" resultType="com.lifeix.cbs.api.dto.mission.MissionGold">
+        SELECT
+        *
+        FROM
+        <include refid="TABLE_NAME" />
+        WHERE
+        id = #{id}
+        LIMIT 1
+    </select>
+
+
+    <select id="getAll" resultType="com.lifeix.cbs.api.dto.mission.MissionGold">
+        SELECT
+        *
+        FROM
+        <include refid="TABLE_NAME" />
+    </select>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.api.dto.mission.MissionGold" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		<include refid="TABLE_NAME" />
+		(point, price)
+		VALUES
+		(#{point},#{price})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.mission.MissionGold">
+        UPDATE
+        <include refid="TABLE_NAME"/>
+        <set>
+            <if test="point != null">
+                point=#{point},
+            </if>
+            <if test="price != null">
+                price=#{price},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+	</update>
+
+    <delete id="delete">
+        DELETE
+        FROM
+        <include refid="TABLE_NAME" />
+        WHERE
+        id = #{id}
+    </delete>
+
+
+</mapper>

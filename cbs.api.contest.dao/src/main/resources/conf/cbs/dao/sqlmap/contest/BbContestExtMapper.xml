@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BbContestExtMapper">
+
+	<sql id="TAB_NAME">cbs_bb_contest_ext</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.bb.BbContestExt">
+		SELECT
+		contestId,lineups,referee,venue 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		contestId = #{contestId} 
+		LIMIT 1 
+	</select>
+	
+	<update id="saveContestExt" parameterType="java.util.List">
+		INSERT INTO 
+		<include refid="TAB_NAME" />
+		    (contestId,lineups,referee,venue,createTime)  
+	    VALUES  
+	    <foreach collection="list" index="index" item="item" separator=",">  
+	        (#{item.contestId},#{item.lineups},#{item.referee},#{item.venue},NOW())  
+	    </foreach> 
+	    ON DUPLICATE KEY UPDATE  
+	    lineups = VALUES(lineups),
+	    referee = VALUES(referee),
+	    venue = VALUES(venue)
+	</update>
+
+</mapper>

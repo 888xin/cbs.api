@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContestAdMapper">
+
+	<sql id="TAB_NAME">cbs_contest_ad</sql>
+
+	<sql id="SELECT_COLUMN">
+		id,contestId,contestType,title,images,text,hideFlag,createTime,updateTime
+	</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.contest.ContestAd">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		id = #{id}
+		LIMIT 1
+	</select>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.contest.dto.contest.ContestAd">
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(id,contestId,contestType,title,images,text,hideFlag,createTime,updateTime)
+		VALUES
+		(#{id},#{contestId},#{contestType},#{title},#{images},#{text},#{hideFlag},#{createTime},#{updateTime})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.contest.ContestAd">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		contestId=#{contestId}, contestType=#{contestType}, title=#{title},
+		images=#{images}, text=#{text}
+		WHERE
+		id = #{id}
+	</update>
+
+	<update id="updateHide">
+		UPDATE
+		<include refid="TAB_NAME" />
+		SET
+		hideFlag=#{hideFlag}
+		WHERE
+		id = #{id}
+	</update>
+
+	<select id="findContestAds" resultType="com.lifeix.cbs.contest.dto.contest.ContestAd">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		<where>
+			<if test="hideFlag != null ">
+				hideFlag = #{hideFlag}
+			</if>
+			<if test="contestType != null ">
+				AND contestType=#{contestType}
+			</if>
+			<if test="startId != null">
+				AND id &lt; #{startId}
+			</if>
+		</where>
+		ORDER BY id DESC
+		LIMIT #{limit}
+	</select>
+</mapper>

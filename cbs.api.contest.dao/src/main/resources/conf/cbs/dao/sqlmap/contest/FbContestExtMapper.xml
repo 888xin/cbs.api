@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FbContestExtMapper">
+
+	<sql id="TAB_NAME">cbs_fb_contest_ext</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.fb.FbContestExt">
+		SELECT
+		contestId,targetId,status,scores,homeTeamExt,awayTeamExt,
+		lineups,goals,penalties,cards,substitutions,referee,venue
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		contestId = #{contestId} 
+		LIMIT 1 
+	</select>
+	
+	<update id="saveContestExt" parameterType="java.util.List">
+		INSERT INTO 
+		<include refid="TAB_NAME" />
+		    (contestId,targetId,status,scores,homeTeamExt,awayTeamExt,lineups,
+		    goals,penalties,cards,substitutions,referee,venue,createTime)  
+	    VALUES  
+	    <foreach collection="list" index="index" item="item" separator=",">  
+	        (#{item.contestId},#{item.targetId},#{item.status},#{item.scores},#{item.homeTeamExt},
+	        #{item.awayTeamExt},#{item.lineups},#{item.goals},#{item.penalties},#{item.cards},#{item.substitutions},
+	        #{item.referee},#{item.venue},NOW())  
+	    </foreach> 
+	    ON DUPLICATE KEY UPDATE  
+	    status = VALUES(status),
+	    scores = VALUES(scores),
+	    homeTeamExt = VALUES(homeTeamExt),
+	    awayTeamExt = VALUES(awayTeamExt),
+	    lineups = VALUES(lineups),
+	    goals = VALUES(goals),
+	    penalties = VALUES(penalties),
+	    cards = VALUES(cards),
+	    substitutions = VALUES(substitutions),
+	    referee = VALUES(referee),
+	    venue = VALUES(venue)  
+	</update>
+
+</mapper>

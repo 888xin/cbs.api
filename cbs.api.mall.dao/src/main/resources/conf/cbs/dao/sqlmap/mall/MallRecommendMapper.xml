@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MallRecommendMapper">
+
+	<sql id="TAB_NAME">cbs_mall_recommend</sql>
+
+	<insert id="insert" parameterType="com.lifeix.cbs.mall.dto.order.MallRecommend" >
+		INSERT INTO
+		<include refid="TAB_NAME" />
+		(image,title,type,link,sort,createTime)
+		VALUES
+		(#{image},#{title},#{type},#{link},#{sort},#{createTime})
+	</insert>
+
+	<update id="update" parameterType="com.lifeix.cbs.mall.dto.order.MallRecommend">
+		UPDATE
+		<include refid="TAB_NAME" />
+		<set>
+			<if test="image != null">
+				image=#{image},
+			</if>
+			<if test="title != null">
+				title=#{title},
+			</if>
+			<if test="type != null">
+				type=#{type},
+			</if>
+			<if test="link != null">
+				link=#{link},
+			</if>
+			<if test="sort != null">
+				sort=#{sort}
+			</if>
+		</set>
+		WHERE
+		id = #{id}
+
+	</update>
+
+	<select id="selectById" resultType="com.lifeix.cbs.mall.dto.order.MallRecommend">
+		SELECT
+		id,
+		image,
+		title,
+		type,
+		link,
+		sort,
+		createTime
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		id = #{id}
+	</select>
+
+	<select id="findMallRecommends" resultType="com.lifeix.cbs.mall.dto.order.MallRecommend">
+		SELECT
+		id,
+		image,
+		title,
+		type,
+		link,
+		sort,
+		createTime
+		FROM
+		<include refid="TAB_NAME" />
+		ORDER BY sort DESC
+	</select>
+
+	<delete id="delete" parameterType="com.lifeix.cbs.mall.dto.order.MallRecommend">
+		delete from cbs_mall_recommend
+		where id = #{id}
+	</delete>
+
+</mapper>

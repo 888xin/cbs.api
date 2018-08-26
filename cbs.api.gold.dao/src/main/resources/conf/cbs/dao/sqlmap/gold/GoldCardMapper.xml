@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GoldCardMapper">
+	<select id="findById" resultType="com.lifeix.cbs.api.dto.gold.GoldCard">
+		SELECT
+		cardId, 
+		amount, 
+		obtain, 
+		content, 
+		stock, 
+		enable 
+		FROM cbs_gold_card  
+		WHERE 
+		cardId = #{id}
+		LIMIT 1
+	</select>
+	
+	<insert id="insertAndGetPrimaryKey" parameterType="com.lifeix.cbs.api.dto.gold.GoldCard" useGeneratedKeys="true" keyProperty="cardId" >
+		INSERT INTO 
+		cbs_gold_card (amount, obtain, content, stock, enable ) 
+		VALUES (#{amount},#{obtain},#{content},#{stock},#{enable})
+	</insert>
+	
+	<update id="update" parameterType="com.lifeix.cbs.api.dto.gold.GoldCard">
+		UPDATE  
+		cbs_gold_card 
+		SET 
+		amount=#{amount},obtain=#{obtain}, content=#{content}, stock=#{stock},enable=#{enable} 
+		WHERE cardId = #{cardId}
+	</update>
+	
+	<delete id="delete" parameterType="com.lifeix.cbs.api.dto.gold.GoldCard">
+		delete from cbs_gold_card where userId = #{userId}
+	</delete>
+	
+	
+	<select id="findGoldCards" resultType="com.lifeix.cbs.api.dto.gold.GoldCard">
+		SELECT 
+		cardId, 
+		amount, 
+		obtain, 
+		content, 
+		stock, 
+		enable 
+		FROM cbs_gold_card  
+		WHERE enable = #{enable}
+	</select>
+	
+</mapper>

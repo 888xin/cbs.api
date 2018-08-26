@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BbTeamMapper">
+
+	<sql id="TAB_NAME">cbs_bb_team</sql>
+
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.bb.BbTeam">
+		SELECT
+		btId, 
+		targetId, 
+		name, 
+		nameEN, 
+		logo, 
+		status, 
+		countryId 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		btId = #{btId}
+		LIMIT 1
+	</select>
+
+	<select id="searchTeam" resultType="com.lifeix.cbs.contest.dto.bb.BbTeam">
+		SELECT
+		btId, 
+		targetId, 
+		name, 
+		nameEN, 
+		logo, 
+		status, 
+		countryId 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		name LIKE '%${key}%' 
+		OR 
+		nameEN LIKE '%${key}%' 
+	</select>
+	
+	
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.bb.BbTeam">
+		UPDATE
+		<include refid="TAB_NAME" />
+		<set>
+			<if test="name != null">
+				name=#{name},
+			</if>
+			<if test="logo != null">
+				logo=#{logo}
+			</if>
+		</set>
+		WHERE 
+		btId=#{btId}
+	</update>
+	
+	<select id="selectByIds" resultType="com.lifeix.cbs.contest.dto.bb.BbTeam">
+		SELECT
+		btId, 
+		targetId, 
+		name, 
+		nameEN, 
+		logo, 
+		status, 
+		countryId 
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		btId IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<insert id="saveTeam" parameterType="java.util.List">
+		INSERT IGNORE INTO 
+		<include refid="TAB_NAME" />
+			 (targetId, cupId, name, nameFull, nameEN, logo, data, status, countryId) 
+		VALUES 
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.targetId},#{item.cupId},#{item.name},#{item.nameFull},#{item.nameEN},#{item.logo},#{item.data},#{item.status},#{item.countryId}) 
+		</foreach>
+	</insert>
+	
+	<select id="getAllTeam" resultType="com.lifeix.cbs.contest.dto.bb.BbTeam">
+		SELECT  
+		btId,targetId,cupId,name,nameFull,nameEN,logo,data,status,countryId 
+		FROM 
+		<include refid="TAB_NAME" />
+	</select>
+	
+	<select id="getTeamByTargetIds" resultType="com.lifeix.cbs.contest.dto.bb.BbTeam">
+		SELECT  
+		btId,targetId,cupId,name,nameFull,nameEN,logo,data,status,countryId 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE targetId IN 
+		 <foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
+	        #{item}   
+	    </foreach> 
+	</select>
+	
+</mapper>

@@ -1,0 +1,14 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+ http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- tiyu-api-content服务-->
+	<!--<dubbo:reference id="cbsContentViewService" interface="com.lifeix.tiyu.content.service.content.cbs.CbsContentViewService" version="${zookeeper.tiyu.version}" >-->
+	<!--</dubbo:reference>-->
+	<!---->
+	<!--<dubbo:reference id="tiyuCommentService" interface="com.lifeix.tiyu.content.service.comment.CommentService" version="${zookeeper.tiyu.version}">-->
+	<!--</dubbo:reference>-->
+	
+</beans>

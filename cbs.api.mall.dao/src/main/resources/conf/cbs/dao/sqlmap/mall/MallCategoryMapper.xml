@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MallCategoryMapper">
+
+    <sql id="table_name">cbs_mall_category</sql>
+
+    <insert id="insert" parameterType="com.lifeix.cbs.mall.dto.goods.MallCategory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        <include refid="table_name"/>
+        (name,path,descr,num,sortIndex)
+        values
+        (#{name},#{path},#{descr},#{num},#{sortIndex})
+    </insert>
+
+    <select id="findByName" resultType="com.lifeix.cbs.mall.dto.goods.MallCategory">
+        SELECT
+        *
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        name = #{name}
+    </select>
+
+    <select id="findAllCategorys" resultType="com.lifeix.cbs.mall.dto.goods.MallCategory">
+        SELECT
+        *
+        FROM
+        <include refid="table_name"/>
+        WHERE status = 0
+        ORDER BY sortIndex DESC
+        <if test="num != null">
+            LIMIT #{num}
+        </if>
+    </select>
+
+    <select id="findAllCategorysInner" resultType="com.lifeix.cbs.mall.dto.goods.MallCategory">
+        SELECT
+        *
+        FROM
+        <include refid="table_name"/>
+    </select>
+
+    <update id="update" parameterType="com.lifeix.cbs.mall.dto.goods.MallCategory">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="descr != null">
+                descr=#{descr},
+            </if>
+            <if test="path != null">
+                path=#{path},
+            </if>
+            <if test="num != null">
+                num=#{num},
+            </if>
+            <if test="sortIndex != null">
+                sortIndex=#{sortIndex},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM
+        <include refid="table_name" />
+        WHERE
+        id=#{id}
+    </delete>
+
+
+    <update id="incrementNum">
+        update
+        <include refid="table_name"/>
+        SET num = num + 1
+        WHERE
+        id = #{id}
+    </update>
+
+</mapper>

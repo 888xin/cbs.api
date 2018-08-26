@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.lifeix.cbs.api</groupId>
+		<artifactId>cbs.api</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>cbs.api.user.impl</artifactId>
+	<name>cbs.api.user.impl</name>
+	<packaging>jar</packaging>
+	<version>${cbs.api.impl.version}</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.lifeix.cbs.api</groupId>
+			<artifactId>cbs.api.user.dao</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.lifeix.cbs.api</groupId>
+			<artifactId>cbs.api.gold.service</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.lifeix.cbs.api</groupId>
+			<artifactId>cbs.api.gold.impl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lifeix.cbs.api</groupId>
+			<artifactId>cbs.api.contest.service</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lifeix.cbs.api</groupId>
+			<artifactId>cbs.api.user.service</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lifeix.cbs.api</groupId>
+			<artifactId>cbs.api.message.service</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.lifeix.nyx</groupId>
+			<artifactId>relationship.service</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-core</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.lifeix.tiyu</groupId>
+			<artifactId>community.message.service</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.ws.rs</groupId>
+					<artifactId>javax.ws.rs-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

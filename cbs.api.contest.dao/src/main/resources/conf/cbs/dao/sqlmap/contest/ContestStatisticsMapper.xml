@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContestStatisticsMapper">
+
+	<select id="findContestsBySame" resultType="com.lifeix.cbs.contest.dto.contest.Contest">
+		SELECT
+		contestId, startTime, homeTeam, awayTeam
+		FROM
+		<if test="type == 0">
+			cbs_fb_contest
+		</if>
+		<if test="type == 1">
+			cbs_bb_contest
+		</if>
+		WHERE startTime between ADDDATE(now(),INTERVAL 1 DAY) and ADDDATE(now(),INTERVAL 15 DAY)
+		AND status = 0
+		AND level= 1
+	</select>
+
+	<select id="findContestsByStatus" resultType="com.lifeix.cbs.contest.dto.contest.Contest">
+		SELECT
+		contestId
+		FROM
+		<if test="type == 0">
+			cbs_fb_contest
+		</if>
+		<if test="type == 1">
+			cbs_bb_contest
+		</if>
+		WHERE startTime between now() and ADDDATE(now(),INTERVAL 7 DAY)
+		AND status = #{status}
+		AND level= 1
+	</select>
+
+
+	<select id="findContestsById" resultType="com.lifeix.cbs.contest.dto.contest.Contest">
+		SELECT
+		homeTeam, awayTeam, startTime
+		FROM
+		<if test="type == 0">
+			cbs_fb_contest
+		</if>
+		<if test="type == 1">
+			cbs_bb_contest
+		</if>
+		WHERE contestId = #{contestId}
+	</select>
+
+	<select id="findBetMoney" resultType="double">
+		SELECT SUM(bet)
+		FROM
+		<if test="playType == 1">
+			cbs_fb_bet_op
+		</if>
+		<if test="playType == 2">
+			cbs_fb_bet_jc
+		</if>
+		<if test="playType == 4">
+			cbs_fb_bet_size
+		</if>
+		<if test="playType == 6">
+			cbs_bb_bet_op
+		</if>
+		<if test="playType == 7">
+			cbs_bb_bet_jc
+		</if>
+		<if test="playType == 9">
+			cbs_bb_bet_size
+		</if>
+		WHERE
+		isLongbi = 1
+		AND
+		contestId = #{contestId}
+		AND
+		support = #{support}
+	</select>
+	
+</mapper>

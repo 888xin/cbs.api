@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FbLiveWordsMapper">
+
+	<sql id="TAB_NAME">cbs_fb_live_words</sql>
+
+	<select id="selectByContestId" resultType="com.lifeix.cbs.contest.dto.fb.FbLiveWords">
+		SELECT 
+		phraseId,contestId,targetId,targetPhraseId,textContent,time,injuryTime,disabled,type 
+		FROM 
+		<include refid="TAB_NAME" />
+		WHERE 
+		contestId = #{contestId} AND disabled = FALSE 
+		<if test="endId != null">  
+            AND phraseId &gt; #{endId}  
+        </if>  
+		ORDER BY phraseId DESC 
+	</select>
+	
+	<update id="saveLiveWords" parameterType="java.util.List">
+		INSERT INTO 
+		<include refid="TAB_NAME" />
+		    (phraseId,contestId,targetId,targetPhraseId,textContent,time,injuryTime,disabled,type,createTime)  
+	    VALUES  
+	    <foreach collection="list" index="index" item="item" separator=",">  
+	        (#{item.phraseId},#{item.contestId},#{item.targetId},#{item.targetPhraseId},
+	        #{item.textContent},#{item.time},#{item.injuryTime},#{item.disabled},#{item.type},NOW()) 
+	    </foreach> 
+	    ON DUPLICATE KEY UPDATE  
+	    textContent = VALUES(textContent),
+	    time = VALUES(time),
+	    injuryTime = VALUES(injuryTime),
+	    disabled = VALUES(disabled),
+	    type = VALUES(type) 
+	</update>
+
+</mapper>

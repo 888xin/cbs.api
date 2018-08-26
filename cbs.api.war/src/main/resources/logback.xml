@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+	<property scope="system" name="APP_NAME" value="cbs-content" />
+	<property scope="system" name="APP_VERSION" value="1.0.1-BETA1-r${buildNumber}" />
+	<property scope="system" name="APP_ENV" value="development" />
+	<property scope="system" name="LOG_DIR" value="/usr/local/tomcat/logs" />
+	<property scope="system" name="SETTLE_LOG" value="cbs-content-settle" />
+
+
+    <!-- 赛事结算日志 -->
+	<appender name="cbs-settle" class="ch.qos.logback.core.rolling.RollingFileAppender" >
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>debug</level>
+		</filter>
+
+		<file>${LOG_DIR}/${SETTLE_LOG}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 日志每天进行rotate -->
+			<fileNamePattern>${LOG_DIR}/${SETTLE_LOG}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- 每个日志文件大小不超过2GB -->
+				<maxFileSize>2000MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+
+		<!-- 日志输出格式 -->
+		<encoder>
+			<pattern>%-20(%d{yyy-MM-dd HH:mm:ss.SSS} [%thread]) %-5level %logger{80} - %msg%n</pattern>
+		</encoder>
+	</appender>
+    
+    
+	<!-- 日志写入文件系统 -->
+	<appender name="ROLLING"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 默认输出INFO级别 -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>info</level>
+		</filter>
+
+		<file>${LOG_DIR}/${APP_NAME}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 日志每天进行rotate -->
+			<fileNamePattern>${LOG_DIR}/${APP_NAME}-%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- 每个日志文件大小不超过5GB -->
+				<maxFileSize>5000MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+
+		<!-- 日志输出格式 -->
+		<encoder>
+			<pattern>%-20(%d{yyy-MM-dd HH:mm:ss.SSS} [%thread]) %-5level
+				%logger{80} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- console输出 -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>info</level>
+		</filter>
+		<encoder>
+			<pattern>%-20(%d{yyy-MM-dd HH:mm:ss.SSS} [%thread]) %-5level
+				%logger{80} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- logstash json格式日志设置 -->
+	<appender name="logstash"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/logstash_${APP_NAME}.json</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/logstash_${APP_NAME}%d{yyyy-MM-dd}.%i.json
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 2MB -->
+				<maxFileSize>5000MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoding>UTF-8</encoding>
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+	</appender>
+
+	<!-- 默认级别是DEBUG，在不同的appender里面使用filter来分别设置日志级别 -->
+	<root level="DEBUG">
+		<appender-ref ref="ROLLING" />
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="logstash" />
+	</root>
+
+	<!-- 对于一些特定的包进行默认日志级别设定 -->
+	<logger name="org.kaleidofoundry.core" level="WARN" />
+	<logger name="com.lifeix.common.cloudjdbcdao.jdbc.transaction.TransactionManager" level="ERROR" />
+	<logger name="net.rubyeye.xmemcached" level="INFO" />
+	<logger name="com.google.code.yanf4j.core" level="ERROR" />
+	<logger name="com.lifeix.utility" level="INFO" />
+	<logger name="com.l99.ip.query" level="INFO" />
+	<logger name="org.apache.mina.filter.logging" level="WARN" />
+	<logger name="com.l99.service.at" level="INFO" />
+	<logger name="com.lifeix.mqclient" level="INFO" />
+	<logger name="com.lifeix.cbs.contest.util.CbsSettleLog" level="DEBUG" additivity="false">
+		<appender-ref ref="cbs-settle" />
+	</logger>
+
+</configuration>

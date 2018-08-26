@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BunchPrizeMapper">
+
+    <sql id="TAB_NAME">cbs_bunch_prize</sql>
+
+    <select id="selectById" resultType="com.lifeix.cbs.contest.dto.bunch.BunchPrize">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="selectByBunchId" resultType="com.lifeix.cbs.contest.dto.bunch.BunchPrize">
+        SELECT
+        *
+        FROM
+        <include refid="TAB_NAME"/>
+        WHERE
+        bunchId = #{bunchId}
+    </select>
+
+    <insert id="insert" parameterType="com.lifeix.cbs.contest.dto.bunch.BunchPrize">
+        INSERT INTO
+        <include refid="TAB_NAME"/>
+        (bunchId, name, price, type, winNum, num, image)
+        VALUES
+        (#{bunchId},#{name},#{price},#{type},#{winNum},#{num},#{image})
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO
+        <include refid="TAB_NAME" />
+        (bunchId, name, price, type, winNum, num, image)
+        VALUES
+        <foreach collection="list" index="index" item="item"
+                 separator=",">
+            (#{item.bunchId},#{item.name},#{item.price},#{item.type},#{item.winNum},#{item.num},#{item.image})
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.lifeix.cbs.contest.dto.bunch.BunchPrize">
+        UPDATE
+        <include refid="TAB_NAME"/>
+        <set>
+            <if test="bunchId != null">
+                bunchId=#{bunchId},
+            </if>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="price != null">
+                price=#{price},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="num != null">
+                num=#{num},
+            </if>
+            <if test="winNum != null">
+                winNum=#{winNum},
+            </if>
+            <if test="image != null">
+                image=#{image},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+</mapper>

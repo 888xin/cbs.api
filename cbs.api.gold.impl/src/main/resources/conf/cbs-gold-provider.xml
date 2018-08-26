@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        ">
+    
+	<!-- 龙筹券日志 -->
+	<dubbo:service interface="com.lifeix.cbs.api.service.gold.GoldLogService" id="goldLogServiceImp" ref="goldLogService"  />
+	
+	<!-- 龙筹券统计 -->
+    <dubbo:service id="goldStatistic"  interface="com.lifeix.cbs.api.service.spark.gold.GoldStatisticDubbo" ref="goldStatisticDubbo"  ></dubbo:service>
+    <bean id="goldStatisticDubbo" class="com.lifeix.cbs.api.impl.spark.gold.GoldStatisticDubboImpl" />
+    
+    <!-- 龙币统计 -->
+    <dubbo:service id="moneyStatistic" interface="com.lifeix.cbs.api.service.spark.gold.MoneyStatisticDubbo" ref="moneyStatisticDubbo"  ></dubbo:service>
+    <bean id="moneyStatisticDubbo" class="com.lifeix.cbs.api.impl.spark.gold.MoneyStatisticDubboImpl" />
+    
+    <!-- 龙币订单 -->
+    <dubbo:service id="moneyOrder" interface="com.lifeix.cbs.api.service.spark.gold.MoneyOrderDubbo" ref="moneyOrderDubbo"  ></dubbo:service>
+    <bean id="moneyOrderDubbo" class="com.lifeix.cbs.api.impl.spark.gold.MoneyOrderDubboImpl" />
+     <!-- 龙筹券提醒 -->
+    <dubbo:service id="couponUser"  interface="com.lifeix.cbs.api.service.spark.coupon.CouponUserDubbo" ref="couponUserDubbo"  ></dubbo:service>
+    <bean id="couponUserDubbo" class="com.lifeix.cbs.api.impl.spark.coupon.CouponUserDubboImpl" />
+
+    <!-- 床上用户在大赢家的任务 -->
+    <dubbo:service interface="com.lifeix.cbs.api.service.spark.mission.NyxMissionDubbo" ref="nyxMissionDubbo"  ></dubbo:service>
+    <bean id="nyxMissionDubbo" class="com.lifeix.cbs.api.impl.spark.mission.NyxMissionDubboImpl" />
+
+</beans>

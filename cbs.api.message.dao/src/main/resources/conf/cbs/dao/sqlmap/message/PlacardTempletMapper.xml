@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PlacardTempletMapper">
+
+	<sql id="table_name">cbs_placard_templet</sql>
+
+    <sql id="selectId">
+	templetId,
+	title,
+	content,
+	createTime,
+	endTime,
+	disableFlag,
+	placardCount,
+	linkType,
+	linkData
+	</sql>
+
+    <insert id="insert" parameterType="com.lifeix.cbs.message.dto.PlacardTemplet" useGeneratedKeys="true" keyProperty="templetId">
+        INSERT INTO
+        <include refid="table_name"/>
+        (
+        <include refid="selectId"/>
+        )
+        values
+        (#{templetId},#{title},#{content},#{createTime},#{endTime},#{disableFlag},#{placardCount},#{linkType},#{linkData})
+    </insert>
+
+    <select id="findById" resultType="com.lifeix.cbs.message.dto.PlacardTemplet">
+        SELECT
+        <include refid="selectId"/>
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        templetId = #{templetId}
+    </select>
+
+    <select id="findLastTemplet" resultType="com.lifeix.cbs.message.dto.PlacardTemplet">
+        SELECT
+        <include refid="selectId"/>
+        FROM
+        <include refid="table_name"/>
+        ORDER BY templetId DESC limit 1
+    </select>
+
+    <select id="getPlacardTempletCount" resultType="int">
+        SELECT
+        COUNT(0)
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        <if test="disableFlag != null">
+            disableFlag = #{disableFlag} AND
+        </if>
+        endTime > now()
+    </select>
+
+
+    <select id="findPlacardTemplet" resultType="com.lifeix.cbs.message.dto.PlacardTemplet">
+        SELECT
+        <include refid="selectId"/>
+        FROM
+        <include refid="table_name"/>
+        <where>
+            <if test="disableFlag != null">
+                AND disableFlag = #{disableFlag}
+            </if>
+            <if test="endTimeFlag == true">
+                AND endTime > now()
+            </if>
+        </where>
+        ORDER BY templetId DESC limit #{start},#{showData}
+    </select>
+
+    <select id="findPlacardsInner" resultType="com.lifeix.cbs.message.dto.PlacardTemplet">
+        SELECT
+        <include refid="selectId"/>
+        FROM
+        <include refid="table_name"/>
+        <where>
+            <if test="startId != null">
+                AND templetId &lt; #{startId}
+            </if>
+        </where>
+        ORDER BY templetId DESC limit #{limit}
+    </select>
+
+    <update id="update" parameterType="com.lifeix.cbs.message.dto.PlacardTemplet">
+        update
+        <include refid="table_name"/>
+        <set>
+            <if test="title != null">
+                title=#{title},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="createTime != null">
+                createTime=#{createTime},
+            </if>
+            <if test="endTime != null">
+                endTime=#{endTime},
+            </if>
+            <if test="disableFlag != null">
+                disableFlag=#{disableFlag},
+            </if>
+            <if test="placardCount != null">
+                placardCount=#{placardCount},
+            </if>
+            <if test="linkType != null">
+                linkType=#{linkType},
+            </if>
+            <if test="linkData != null">
+                linkData=#{linkData},
+            </if>
+        </set>
+        WHERE
+        templetId = #{templetId}
+    </update>
+
+    <update id="placardCount" parameterType="long">
+        update
+        <include refid="table_name"/>
+        SET
+        placardCount = placardCount+1
+        WHERE
+        templetId = #{templetId}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE
+		FROM
+        <include refid="table_name"/>
+        WHERE
+        templetId = #{templetId}
+    </delete>
+
+
+</mapper>

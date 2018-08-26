@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BbPlayerMapper">
+
+	<sql id="TAB_NAME">cbs_bb_player</sql>
+	
+	<sql id="SELECT_COLUMN">id,targetId,name,firstName,lastName,teamId</sql>
+	
+	<select id="selectMore" resultType="com.lifeix.cbs.contest.dto.bb.BbPlayer">
+		SELECT 
+		<include refid="SELECT_COLUMN" />
+		FROM 
+		<include refid="TAB_NAME" />
+		<where>
+			<if test="startId != null">
+				id &gt; #{startId}
+			</if>
+		</where>
+		ORDER BY id ASC 
+		LIMIT #{num}
+	</select>
+	
+	<update id="update" parameterType="com.lifeix.cbs.contest.dto.bb.BbPlayer">
+		UPDATE <include refid="TAB_NAME" />
+		SET name = #{name}, firstName = #{firstName}, lastName = #{lastName} 
+		WHERE id = #{id} 
+	</update>
+	
+	<update id="updateTeamId" parameterType="list">
+		UPDATE <include refid="TAB_NAME" /> 
+		<trim prefix=" SET " suffixOverrides=",">
+			<trim prefix=" teamId = CASE " suffix=" END, ">
+				<foreach collection="list" item="item" index="index">
+					WHEN id=#{item.id} THEN #{item.teamId}
+				</foreach>
+			</trim>
+		</trim>
+		WHERE id IN 
+		<foreach collection="list" separator="," item="item" index="index"
+			open="(" close=")">
+			#{item.id} 
+		</foreach>
+	</update>
+	
+	<update id="savePlayers" parameterType="java.util.List">
+		INSERT IGNORE INTO 
+		<include refid="TAB_NAME" />
+		    (targetId,name,firstName,lastName,teamId,createTime)  
+	    VALUES  
+	    <foreach collection="list" index="index" item="item" separator=",">  
+	        (#{item.targetId},#{item.name},#{item.firstName},#{item.lastName},#{item.teamId},NOW()) 
+	    </foreach> 
+	</update>
+	
+	<select id="selectByTargetIds" resultType="com.lifeix.cbs.contest.dto.bb.BbPlayer">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		targetId IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="selectByTargetId" resultType="com.lifeix.cbs.contest.dto.bb.BbPlayer">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		targetId = #{targetId} 
+		LIMIT 1 
+	</select>
+	
+	<select id="selectById" resultType="com.lifeix.cbs.contest.dto.bb.BbPlayer">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		id = #{id} 
+		LIMIT 1 
+	</select>
+	
+	<select id="selectByName" resultType="com.lifeix.cbs.contest.dto.bb.BbPlayer">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		name LIKE "%"#{name}"%" 
+	</select>
+	
+	<select id="getAllPlayers" resultType="com.lifeix.cbs.contest.dto.bb.BbPlayer">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+	</select>
+	
+	
+	<select id="selectByTeamId" resultType="com.lifeix.cbs.contest.dto.bb.BbPlayer">
+		SELECT
+		<include refid="SELECT_COLUMN" />
+		FROM
+		<include refid="TAB_NAME" />
+		WHERE
+		teamId = #{teamId} 
+		LIMIT 40 
+	</select>
+
+</mapper>
